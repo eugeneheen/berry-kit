@@ -159,6 +159,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
      * 创建HttpPost请求对象。
      *
      * @param url 请求的URL。
+     * @param data 请求数据
      * @return HttpPost请求对象。
      */
     public HttpPost createHttpPost(String url, String data) {

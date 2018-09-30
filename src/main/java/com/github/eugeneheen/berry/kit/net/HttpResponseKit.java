@@ -50,7 +50,7 @@ public class HttpResponseKit {
      * @param httpResponse HttpResponse响应对象。
      * @return 字节数组响应正文。
      */
-    public byte[] getBytesContent(HttpResponse httpResponse, Charset charset) {
+    public byte[] getBytesContent(HttpResponse httpResponse) {
         byte[] bytes = null;
         try {
             bytes = EntityUtils.toByteArray(this.getHttpEntity(httpResponse));

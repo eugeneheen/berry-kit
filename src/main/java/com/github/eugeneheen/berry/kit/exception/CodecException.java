@@ -1,9 +1,9 @@
 package com.github.eugeneheen.berry.kit.exception;
 
 /**
+ * 编码处理异常
  * @author Eugene
- * @Description 编码处理异常
- * @data 2018-09-30 13:12
+ * 2018-09-30 13:12
  */
 public class CodecException extends DefineException {
     public CodecException() {
