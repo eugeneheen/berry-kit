@@ -28,4 +28,16 @@ public class CodecKitTest {
         decode = codecKit.decodeBase64(encode);
         Assert.assertEquals("Eugene", decode);
     }
+
+    @Test
+    public void test3Des() {
+        String key = "xUHdKxzVCbsgVIwTnc1jtpWn";
+        String idCard = "130682199606071234";
+        String encode = this.codecKit.encode3Des(key, idCard);
+        Assert.assertEquals(idCard, this.codecKit.decode3Des(key, encode));
+
+        String defaultVal = "18980ssf840323eA";
+        String encodeDafault = this.codecKit.encode3Des(defaultVal);
+        Assert.assertEquals(defaultVal, this.codecKit.decode3Des(encodeDafault));
+    }
 }
