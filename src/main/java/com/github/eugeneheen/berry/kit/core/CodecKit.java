@@ -141,7 +141,7 @@ public class CodecKit {
      * @return 加密前的原始字符串
      */
     public String decodeBase64(byte [] bytes) {
-        return this.decodeBase64Bytes(bytes).toString();
+        return new String(this.decodeBase64Bytes(bytes));
     }
 
     /**
@@ -150,7 +150,7 @@ public class CodecKit {
      * @return 加密前的原始字符串
      */
     public String decodeBase64(String base64Str) {
-        return this.decodeBase64Bytes(base64Str).toString();
+        return new String(this.decodeBase64Bytes(base64Str));
     }
 
     /**
