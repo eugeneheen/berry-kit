@@ -400,7 +400,7 @@ public class StringKit {
      * 生成count参数指定位数的随机字符串，可设置生成内容为character字符、ascii码、数字类型，没有匹配类型默认使用character字符
      *
      * @param count       随机数位数
-     * @param contentType 随机字符串内容的类型，可使用常量RANDOM_TYPE_NUMBER（数字）、RANDOM_TYPE_ALPHABETIC（字母）、RANDOM_TYPE_NUMBER_ALPHABETIC（字母数字）指定类型
+     * @param contentType 随机字符串内容的类型，可使用常量RANDOM_TYPE_NUMBER（数字）、RANDOM_TYPE_ALPHABETIC（字母）、RANDOM_TYPE_CHARACTERS（字母数字）指定类型
      * @return 随机字符串
      * @throws RandomException 随机数异常
      */

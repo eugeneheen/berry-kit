@@ -10,6 +10,7 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -243,6 +244,18 @@ public class CodecKit {
     }
 
     /**
+     * 解码URL地址，默认使用UTF-8编码
+     *
+     * @param encodedUrl 已编码的URL地址
+     * @return 已解码的URL
+     * @throws DecoderException             解码发生异常
+     * @throws UnsupportedEncodingException 不支持的编码字符集
+     */
+    public String decodeUrl(String encodedUrl) throws DecoderException, UnsupportedEncodingException {
+        return this.decodeUrl(encodedUrl, StandardCharsets.UTF_8);
+    }
+
+    /**
      * 编码URL地址
      *
      * @param url     URL地址
@@ -252,5 +265,16 @@ public class CodecKit {
      */
     public String encodeUrl(String url, Charset charset) throws UnsupportedEncodingException {
         return new URLCodec().encode(url, charset.toString());
+    }
+
+    /**
+     * 编码URL地址，默认使用UTF-8编码
+     *
+     * @param url     URL地址
+     * @return 已编码的URL
+     * @throws UnsupportedEncodingException 不支持的编码字符集
+     */
+    public String encodeUrl(String url) throws UnsupportedEncodingException {
+        return this.encodeUrl(url, StandardCharsets.UTF_8);
     }
 }
