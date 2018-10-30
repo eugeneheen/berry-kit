@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.*;
  * 2018-10-09 17:16
  */
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlRootElement
 @XmlSeeAlso({PassivityTextMessage.class})
 public abstract class PassivityMessage {
 

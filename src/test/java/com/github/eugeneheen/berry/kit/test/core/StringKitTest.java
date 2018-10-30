@@ -46,4 +46,10 @@ public class StringKitTest {
             noSupportLogLevel.printStackTrace();
         }
     }
+
+    @Test
+    public void testFormart() {
+        String result = stringKit.formart("您好，{0}，欢迎您，<a href='\"http://www.163.com\"'>点击领取会员卡</a>。", new String[] {"志恒石油集团"});
+        System.out.println(result);
+    }
 }
