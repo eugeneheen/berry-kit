@@ -4,10 +4,7 @@ import com.github.eugeneheen.berry.kit.exception.HttpComponentsException;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -64,7 +61,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
      * @return URI对象。
      */
     public URI createURI(String url) {
-        URI uri = null;
+        URI uri;
         try {
             uri = new URIBuilder(url).build();
         } catch (URISyntaxException e) {
@@ -86,12 +83,13 @@ public class HttpComponentsClientKit extends HttpResponseKit {
     public URI createURI(String scheme, String host, int port, String path, Map<String, String> parameters) {
         //端口缺省设置的值
         final int DEFAULT = -1;
-        URI uri = null;
+        URI uri;
         URIBuilder uriBuilder = new URIBuilder().setScheme(scheme).setHost(host);
         //存在访问端口时，设置指定端口
         if (port != DEFAULT) {
             uriBuilder.setPort(port);
         }
+        uriBuilder.setPath(path);
         //存在请求参数时，在URL后面添加请求参数
         if (parameters != null && parameters.size() > 0) {
             for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -119,8 +117,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
             nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
 
-        HttpEntity httpEntity = null;
-        httpEntity = new UrlEncodedFormEntity(nvps, charset);
+        HttpEntity httpEntity = new UrlEncodedFormEntity(nvps, charset);
 
         return httpEntity;
     }
@@ -179,6 +176,59 @@ public class HttpComponentsClientKit extends HttpResponseKit {
     }
 
     /**
+     * 创建HttpDelete请求对象。
+     *
+     * @param url 请求的URL。
+     * @return HttpDelete请求对象。
+     */
+    public HttpDelete createHttpDelete(String url) {
+        return new HttpDelete(url);
+    }
+
+    /**
+     * 创建HttpDelete请求对象。
+     *
+     * @param uri URI请求对象，带有请求协议、地址、端口、URL、参数。通过HttpComponentsClientKit类的createURI方法创建。
+     * @return HttpDelete请求对象。
+     */
+    public HttpDelete createHttpDelete(URI uri) {
+        return new HttpDelete(uri);
+    }
+
+    /**
+     * 创建HttpPut请求对象。
+     *
+     * @param url 请求的URL。
+     * @return HttpPut请求对象。
+     */
+    public HttpPut createHttpPut(String url) {
+        return new HttpPut(url);
+    }
+
+    /**
+     * 创建HttpPut请求对象。
+     *
+     * @param url 请求的URL。
+     * @param data 请求数据
+     * @return HttpPut请求对象。
+     */
+    public HttpPut createHttpPut(String url, String data) {
+        HttpPut httpPut = new HttpPut(url);
+        httpPut.setEntity(new StringEntity(data, StandardCharsets.UTF_8));
+        return httpPut;
+    }
+
+    /**
+     * 创建HttpPut请求对象。
+     *
+     * @param uri URI请求对象，带有请求协议、地址、端口、URL、参数。通过HttpComponentsClientKit类的createURI方法创建。
+     * @return HttpPut请求对象。
+     */
+    public HttpPut createHttpPut(URI uri) {
+        return new HttpPut(uri);
+    }
+
+    /**
      * 设置Http请求头，Get、Post请求通用设置。
      *
      * @param httpRequestBase Http请求类型基础对象，兼容HttpGet和HttpPost请求对象。
@@ -198,7 +248,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
      */
     public CloseableHttpResponse execute(HttpRequestBase httpRequestBase) {
         CloseableHttpClient client = this.creatHttpClient();
-        CloseableHttpResponse response = null;
+        CloseableHttpResponse response;
         try {
             response = client.execute(httpRequestBase);
         } catch (IOException e) {
@@ -214,7 +264,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
      * @return HttpGet请求响应报文
      */
     public String doGet(String url) {
-        String responseContent = null;
+        String responseContent;
         HttpGet httpGet = this.createHttpGet(url);
         CloseableHttpResponse closeableHttpResponse = this.execute(httpGet);
         HttpEntity httpEntity = closeableHttpResponse.getEntity();
@@ -227,7 +277,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
     }
 
     public String doPost(String url) {
-        String responseContent = null;
+        String responseContent;
         HttpPost httpPost = this.createHttpPost(url);
         CloseableHttpResponse closeableHttpResponse = this.execute(httpPost);
         HttpEntity httpEntity = closeableHttpResponse.getEntity();

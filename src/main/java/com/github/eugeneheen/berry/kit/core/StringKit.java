@@ -41,21 +41,6 @@ public class StringKit {
     public static final String RANDOM_TYPE_ALPHABETIC = "alphabetic";
 
     /**
-     * INFO级别日志
-     */
-    public static final String LOG_LEVEL_INFO = "info";
-
-    /**
-     * ERROR级别日志
-     */
-    public static final String LOG_LEVEL_ERROR = "error";
-
-    /**
-     * DEBUG级别日志
-     */
-    public static final String LOG_LEVEL_DEBUG = "debug";
-
-    /**
      * 构造方法
      */
     public StringKit() {
@@ -441,25 +426,5 @@ public class StringKit {
      */
     public String formart(String formartStr, Object... fillValues) {
         return MessageFormat.format(formartStr, fillValues);
-    }
-
-    /**
-     * 生成指定级别的日志信息字符串
-     * @param messsage 日志信息
-     * @param level    日志级别
-     * @return 规范格式的日志信息
-     * @throws NoSupportLogLevel 的日志级别不被支持异常
-     */
-    public String log(String messsage, String level) throws NoSupportLogLevel {
-        switch (level) {
-            case LOG_LEVEL_INFO:
-                return this.join(new Object[]{StringUtils.center("Info",20, ">"), messsage});
-            case LOG_LEVEL_ERROR:
-                return this.join(new Object[]{StringUtils.center("Error", 20, "*"), messsage});
-            case LOG_LEVEL_DEBUG:
-                return this.join(new Object[]{StringUtils.center("Debug", 20, "#"), messsage});
-            default:
-                throw new NoSupportLogLevel(level + "日志级别系统不支持!");
-        }
     }
 }

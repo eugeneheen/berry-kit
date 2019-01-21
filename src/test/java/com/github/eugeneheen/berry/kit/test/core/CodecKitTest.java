@@ -34,10 +34,11 @@ public class CodecKitTest {
 
     @Test
     public void test3Des() {
-        String key = "eUGeNebeRrYKiTc23zHnjAVa";
-        String idCard = "100015";
-        String encode = CodecKitTest.codecKit.encode3Des(key, idCard);
-        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
+        String key = "eUGeNebeRrYKiTc23zHnjAVa0323MKzM";
+//        String idCard = "100015";
+        String idCard = "100021";
+        String encode = CodecKitTest.codecKit.encode3Des(key);
+//        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
         System.out.println(encode);
 
 //        String defaultVal = "18980ssf840323eA";
@@ -47,15 +48,23 @@ public class CodecKitTest {
 
     @Test
     public void testEncodeUrl() {
+//        try {
+//            String encodeUrl = CodecKitTest.codecKit.encodeUrl("http://demo.trevet.cn/account/register/SN7KNIPsk845dPkfEwdZ5A==/xxxx");
+//            System.out.println(encodeUrl);
+//            String decodeUrl = CodecKitTest.codecKit.decodeUrl(encodeUrl);
+//            System.out.println(decodeUrl);
+//            System.out.println("081jFcl90MpkPw1H0El90R9wl90jFclk".length());
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (DecoderException e) {
+//            e.printStackTrace();
+//        }
         try {
-            String encodeUrl = CodecKitTest.codecKit.encodeUrl("http://demo.trevet.cn/account/register/SN7KNIPsk845dPkfEwdZ5A==/xxxx");
-            System.out.println(encodeUrl);
-            String decodeUrl = CodecKitTest.codecKit.decodeUrl(encodeUrl);
-            System.out.println(decodeUrl);
-            System.out.println("081jFcl90MpkPw1H0El90R9wl90jFclk".length());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            String url =  CodecKitTest.codecKit.decodeUrl("http%3A%2F%2Fwx.toyou.net%2Frouter%2Fregister%2Fproxy%2F1%2F100027");
+            System.out.println(url);
         } catch (DecoderException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
