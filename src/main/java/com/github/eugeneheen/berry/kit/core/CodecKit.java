@@ -1,12 +1,18 @@
 package com.github.eugeneheen.berry.kit.core;
 
+import com.github.eugeneheen.berry.kit.exception.CodecException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.net.URLCodec;
 
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * <p>
@@ -30,6 +36,16 @@ public class CodecKit {
      * SHA1算法
      */
     public static final String ALGORITHMS_SHA1 = "sha1";
+
+    /**
+     * 3DES算法
+     */
+    public static final String ALGORITHMS_DESEDE = "DESede";
+
+    /**
+     * 3DES默认加密Key
+     */
+    public static final String EDES_DEFAULT_KEY = "eUGeNebeRrYKiTc23zHnjAVa";
 
     /**
      * 构造方法
@@ -66,12 +82,31 @@ public class CodecKit {
     }
 
     /**
+     * 转换16进制字符串为字节数组
+     * @param source 待转换的字符串
+     * @param algorithms 编码算法，通过ALGORITHMS_MD5、ALGORITHMS_SHA1等常量指定
+     * @return 字节数组
+     */
+    public byte [] hex2Bytes(String source, String algorithms) {
+        String sourceHex = this.hex(source, algorithms);
+        byte [] sourceHexBytes = new String(sourceHex).getBytes();
+        byte [] clonesourceHexBytes = new byte [24];
+
+        for (int i = 0; i < 24; i++) {
+            clonesourceHexBytes[i] = sourceHexBytes[i];
+        }
+        return clonesourceHexBytes;
+    }
+
+
+
+    /**
      * Base64编码加密
      * @param bytes 需要加密的字节数组
      * @return Base64加密后的字符串
      */
     public String encodeBase64(byte [] bytes) {
-        return new String(Base64.encodeBase64(bytes));
+        return Base64.encodeBase64String(bytes);
     }
 
     /**
@@ -85,11 +120,29 @@ public class CodecKit {
 
     /**
      * Base64编码解密
+     * @param text 需要加密的字符串
+     * @return Base64加密后的字符串
+     */
+    public byte [] decodeBase64Bytes(String text) {
+        return Base64.decodeBase64(text);
+    }
+
+    /**
+     * Base64编码解密
+     * @param bytes 需要解密的Base64字节数组
+     * @return 加密前的原始字符串
+     */
+    public byte [] decodeBase64Bytes(byte [] bytes) {
+        return Base64.decodeBase64(bytes);
+    }
+
+    /**
+     * Base64编码解密
      * @param bytes 需要解密的Base64字节数组
      * @return 加密前的原始字符串
      */
     public String decodeBase64(byte [] bytes) {
-        return new String(Base64.decodeBase64(bytes));
+        return new String(this.decodeBase64Bytes(bytes));
     }
 
     /**
@@ -98,7 +151,83 @@ public class CodecKit {
      * @return 加密前的原始字符串
      */
     public String decodeBase64(String base64Str) {
-        return this.decodeBase64(base64Str.getBytes());
+        return new String(this.decodeBase64Bytes(base64Str));
+    }
+
+    /**
+     * 3DES加密
+     * @param key 加密Key(自定义)
+     * @param srcStr 待加密字符串(24字节)
+     * @return 3DES加密后的字符串
+     */
+    public String encode3Des(String key, String srcStr) {
+        try {
+            byte [] keyBytes = this.hex2Bytes(key, CodecKit.ALGORITHMS_MD5);
+            byte [] srcStrBytes = srcStr.getBytes();
+            // 生成密钥
+            SecretKey deskey = new SecretKeySpec(keyBytes, CodecKit.ALGORITHMS_DESEDE);
+            //加密
+            Cipher cipher = Cipher.getInstance(CodecKit.ALGORITHMS_DESEDE);
+            cipher.init(Cipher.ENCRYPT_MODE, deskey);
+            return this.encodeBase64(cipher.doFinal(srcStrBytes));
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("3DES加密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("3DES加密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("3DES加密发生错误", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CodecException("3DES加密发生发生错误", e);
+        } catch (BadPaddingException e) {
+            throw new CodecException("3DES加密发生发生错误", e);
+        }
+    }
+
+    /**
+     * 3DES加密(使用默认加密Key)
+     * @param srcStr 待加密字符串(24字节)
+     * @return 3DES加密后的字符串
+     */
+    public String encode3Des(String srcStr) {
+        return this.encode3Des(CodecKit.EDES_DEFAULT_KEY, srcStr);
+    }
+
+    /**
+     * 3DES解密
+     * @param key 加密Key(自定义)
+     * @param encodeStr 3DES加密后的字符串
+     * @return 原始字符串
+     */
+    public String decode3Des(String key, String encodeStr) {
+        try {
+            byte [] keyBytes = this.hex2Bytes(key, CodecKit.ALGORITHMS_MD5);
+            byte [] encodeStrBytes = this.decodeBase64Bytes(encodeStr);
+            // 生成密钥
+            SecretKey deskey = new SecretKeySpec(keyBytes, CodecKit.ALGORITHMS_DESEDE);
+            //加密
+            Cipher cipher = Cipher.getInstance(CodecKit.ALGORITHMS_DESEDE);
+            cipher.init(Cipher.DECRYPT_MODE, deskey);
+            return new String(cipher.doFinal(encodeStrBytes));
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("3DES解密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("3DES解密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("3DES解密发生错误", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CodecException("3DES解密发生发生错误", e);
+        } catch (BadPaddingException e) {
+            throw new CodecException("3DES解密发生发生错误", e);
+        }
+    }
+
+    /**
+     * 3DES解密(使用默认加密Key)
+     * @param encodeStr 3DES加密后的字符串
+     * @return 原始字符串
+     */
+    public String decode3Des(String encodeStr) {
+        return this.decode3Des(CodecKit.EDES_DEFAULT_KEY, encodeStr);
     }
 
     /**
@@ -115,6 +244,18 @@ public class CodecKit {
     }
 
     /**
+     * 解码URL地址，默认使用UTF-8编码
+     *
+     * @param encodedUrl 已编码的URL地址
+     * @return 已解码的URL
+     * @throws DecoderException             解码发生异常
+     * @throws UnsupportedEncodingException 不支持的编码字符集
+     */
+    public String decodeUrl(String encodedUrl) throws DecoderException, UnsupportedEncodingException {
+        return this.decodeUrl(encodedUrl, StandardCharsets.UTF_8);
+    }
+
+    /**
      * 编码URL地址
      *
      * @param url     URL地址
@@ -124,5 +265,16 @@ public class CodecKit {
      */
     public String encodeUrl(String url, Charset charset) throws UnsupportedEncodingException {
         return new URLCodec().encode(url, charset.toString());
+    }
+
+    /**
+     * 编码URL地址，默认使用UTF-8编码
+     *
+     * @param url     URL地址
+     * @return 已编码的URL
+     * @throws UnsupportedEncodingException 不支持的编码字符集
+     */
+    public String encodeUrl(String url) throws UnsupportedEncodingException {
+        return this.encodeUrl(url, StandardCharsets.UTF_8);
     }
 }

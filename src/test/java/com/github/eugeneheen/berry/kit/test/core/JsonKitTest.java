@@ -130,6 +130,7 @@ public class JsonKitTest {
         User user = new User();
         user.setName("Eugene");
         user.setAge(20);
+//        user.setDesc("Junit测试描述......");
 
         String expected = "{\"name\":\"Eugene\",\"age\":20}";
         try {

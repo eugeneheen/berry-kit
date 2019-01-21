@@ -41,21 +41,6 @@ public class StringKit {
     public static final String RANDOM_TYPE_ALPHABETIC = "alphabetic";
 
     /**
-     * INFO级别日志
-     */
-    public static final String LOG_LEVEL_INFO = "info";
-
-    /**
-     * ERROR级别日志
-     */
-    public static final String LOG_LEVEL_ERROR = "error";
-
-    /**
-     * DEBUG级别日志
-     */
-    public static final String LOG_LEVEL_DEBUG = "debug";
-
-    /**
      * 构造方法
      */
     public StringKit() {
@@ -400,7 +385,7 @@ public class StringKit {
      * 生成count参数指定位数的随机字符串，可设置生成内容为character字符、ascii码、数字类型，没有匹配类型默认使用character字符
      *
      * @param count       随机数位数
-     * @param contentType 随机字符串内容的类型，可使用常量RANDOM_TYPE_NUMBER（数字）、RANDOM_TYPE_ALPHABETIC（字母）、RANDOM_TYPE_NUMBER_ALPHABETIC（字母数字）指定类型
+     * @param contentType 随机字符串内容的类型，可使用常量RANDOM_TYPE_NUMBER（数字）、RANDOM_TYPE_ALPHABETIC（字母）、RANDOM_TYPE_CHARACTERS（字母数字）指定类型
      * @return 随机字符串
      * @throws RandomException 随机数异常
      */
@@ -441,25 +426,5 @@ public class StringKit {
      */
     public String formart(String formartStr, Object... fillValues) {
         return MessageFormat.format(formartStr, fillValues);
-    }
-
-    /**
-     * 生成指定级别的日志信息字符串
-     * @param messsage 日志信息
-     * @param level    日志级别
-     * @return 规范格式的日志信息
-     * @throws NoSupportLogLevel 的日志级别不被支持异常
-     */
-    public String log(String messsage, String level) throws NoSupportLogLevel {
-        switch (level) {
-            case LOG_LEVEL_INFO:
-                return this.join(new Object[]{StringUtils.center("Info",20, ">"), messsage});
-            case LOG_LEVEL_ERROR:
-                return this.join(new Object[]{StringUtils.center("Error", 20, "*"), messsage});
-            case LOG_LEVEL_DEBUG:
-                return this.join(new Object[]{StringUtils.center("Debug", 20, "#"), messsage});
-            default:
-                throw new NoSupportLogLevel(level + "日志级别系统不支持!");
-        }
     }
 }

@@ -5,6 +5,8 @@ public class User {
 
     private int age;
 
+    private String desc;
+
     public String getName() {
         return name;
     }
@@ -19,6 +21,14 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     @Override

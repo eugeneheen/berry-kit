@@ -30,20 +30,8 @@ public class StringKitTest {
     }
 
     @Test
-    public void testLog() {
-
-        final String infoExpected = ">>>>>>>>Info>>>>>>>>纪录日志消息";
-        final String debugExpected = "#######Debug########调试日志消息";
-        final String errorExpected = "*******Error********错误日志消息";
-        try {
-            String info = stringKit.log("纪录日志消息", StringKit.LOG_LEVEL_INFO);
-            String debug = stringKit.log("调试日志消息", StringKit.LOG_LEVEL_DEBUG);
-            String error = stringKit.log("错误日志消息", StringKit.LOG_LEVEL_ERROR);
-            Assert.assertEquals(infoExpected, info);
-            Assert.assertEquals(debugExpected, debug);
-            Assert.assertEquals(errorExpected, error);
-        } catch (NoSupportLogLevel noSupportLogLevel) {
-            noSupportLogLevel.printStackTrace();
-        }
+    public void testFormart() {
+        String result = stringKit.formart("您好，{0}，欢迎您，<a href='\"http://www.163.com\"'>点击领取会员卡</a>。", new Object [] {"志恒石油集团"});
+        System.out.println(result);
     }
 }

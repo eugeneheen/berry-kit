@@ -1,4 +1,4 @@
-version '1.0.0'
+version '1.0.5'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -54,6 +54,9 @@ ext {
 
     //Junit
     junitVersion = '4.12'
+
+    //Lombok
+    lombokVersion = '1.18.2'
 }
 
 dependencies {
@@ -68,10 +71,19 @@ dependencies {
         "org.apache.commons:commons-text:$commonsTextVersion",
         "commons-codec:commons-codec:$commonsCodecVersion",
         "com.squareup.okhttp3:okhttp:$okhttp3Version"
+
+    )
+
+    compileOnly (
+        "org.projectlombok:lombok:$lombokVersion"
     )
 
     testCompile (
             "junit:junit:$junitVersion"
+    )
+
+    testCompileOnly (
+        "org.projectlombok:lombok:$lombokVersion"
     )
 }
 
