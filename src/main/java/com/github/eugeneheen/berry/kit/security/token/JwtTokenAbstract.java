@@ -27,7 +27,7 @@ public abstract class JwtTokenAbstract implements IJwtToken {
                 return (Long) obj;
             }
 
-            return new Long(obj.toString());
+            return Long.valueOf(obj.toString());
         }
         return null;
     }
@@ -46,7 +46,7 @@ public abstract class JwtTokenAbstract implements IJwtToken {
                 return ((Double) obj).intValue();
             }
 
-            return new Integer(obj.toString());
+            return Integer.valueOf(obj.toString());
         }
         return null;
     }
@@ -97,7 +97,7 @@ public abstract class JwtTokenAbstract implements IJwtToken {
                 return (Boolean) obj;
             }
 
-            return new Boolean(obj.toString());
+            return Boolean.valueOf(obj.toString());
         }
         return null;
     }

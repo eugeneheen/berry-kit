@@ -88,13 +88,9 @@ public class CodecKit {
      * @return 字节数组
      */
     public byte [] hex2Bytes(String source, String algorithms) {
-        String sourceHex = this.hex(source, algorithms);
-        byte [] sourceHexBytes = new String(sourceHex).getBytes();
+        byte [] sourceHexBytes = this.hex(source, algorithms).getBytes();
         byte [] clonesourceHexBytes = new byte [24];
-
-        for (int i = 0; i < 24; i++) {
-            clonesourceHexBytes[i] = sourceHexBytes[i];
-        }
+        System.arraycopy(sourceHexBytes, 0, clonesourceHexBytes, 0, sourceHexBytes.length);
         return clonesourceHexBytes;
     }
 

@@ -117,9 +117,7 @@ public class HttpComponentsClientKit extends HttpResponseKit {
             nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
 
-        HttpEntity httpEntity = new UrlEncodedFormEntity(nvps, charset);
-
-        return httpEntity;
+        return new UrlEncodedFormEntity(nvps, charset);
     }
 
     /**

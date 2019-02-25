@@ -10,6 +10,9 @@ import java.net.URL;
  */
 public class ResourceKit {
 
+    private ResourceKit() {
+    }
+
     /**
      * 从类路径下加载资源文件
      *
