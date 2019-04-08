@@ -6,13 +6,16 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -160,6 +163,23 @@ public class HttpComponentsClientKit extends HttpResponseKit {
     public HttpPost createHttpPost(String url, String data) {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(new StringEntity(data, StandardCharsets.UTF_8));
+        return httpPost;
+    }
+
+    /**
+     * 创建文件上传的HttpPost请求对象
+     * @param url 文件上传地址
+     * @param fileKey 文件上传表单关键字
+     * @param fileName 文件名
+     * @param file 文件上传的Inputsream流
+     * @return HttpPost请求对象
+     */
+    public HttpPost createHttpPost(String url, String fileKey, String fileName, InputStream file) {
+        HttpPost httpPost = new HttpPost(url);
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.addBinaryBody(fileKey, file, ContentType.MULTIPART_FORM_DATA, fileName);
+        HttpEntity httpEntity = entityBuilder.build();
+        httpPost.setEntity(httpEntity);
         return httpPost;
     }
 
