@@ -1,6 +1,7 @@
 package com.github.eugeneheen.berry.kit.core;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * 封装了BigDecimal的常用操作，提供便捷小数运算工具方法，解决计算精度相关问题。
@@ -17,6 +18,26 @@ public class BigDecimalKit {
 
     public BigDecimalKit() {
 
+    }
+
+    /**
+     * RMB单位转换，元转换为分
+     * @param price RMB（单位：元），数据类型double
+     * @return RMB(单位：分)，数据类型long
+     */
+    public long transform2F(double price) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        price = Double.valueOf(decimalFormat.format(price));
+        return BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(100)).longValue();
+    }
+
+    /**
+     * RMB单位转换，分转换为元
+     * @param price RMB(单位：分)，数据类型long
+     * @return RMB（单位：元），数据类型double
+     */
+    public double transform2Y(long price) {
+        return BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100),2,  BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
