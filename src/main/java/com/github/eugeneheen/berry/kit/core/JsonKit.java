@@ -28,7 +28,6 @@ public class JsonKit {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-        this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     }
 
     /**
