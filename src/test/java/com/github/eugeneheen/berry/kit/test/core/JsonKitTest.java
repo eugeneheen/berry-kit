@@ -86,6 +86,7 @@ public class JsonKitTest {
         try {
             List<User> list = jsonKit.readAsCollection(json, List.class, User.class);
             Assert.assertNotNull(list);
+            Assert.assertNull(list.get(0).getDesc());
             Assert.assertEquals(3, list.size());
         } catch (JsonParseException e) {
             e.printStackTrace();
@@ -115,10 +116,12 @@ public class JsonKitTest {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", "eugene");
         userMap.put("age", 18);
+        userMap.put("desc", "");
 
-        String expected = "{\"name\":\"eugene\",\"age\":18}";
+        String expected = "{\"name\":\"eugene\",\"age\":18,\"desc\":\"\"}";
         try {
             String json = jsonKit.write(userMap);
+            System.out.println(json);
             Assert.assertEquals(expected, json);
         } catch (JsonParseException e) {
             e.printStackTrace();

@@ -1,10 +1,13 @@
 package com.github.eugeneheen.berry.kit.test.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
     private String name;
 
     private int age;
 
+//    @JsonIgnore
     private String desc;
 
     public String getName() {
@@ -33,6 +36,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "Name: " + this.getName() + ",Age: " + String.valueOf(this.getAge());
+        return "Name: " + this.getName() + ",Age: " + String.valueOf(this.getAge() + ",Desc:" + this.desc);
     }
 }
