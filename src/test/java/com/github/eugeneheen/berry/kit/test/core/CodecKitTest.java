@@ -34,15 +34,15 @@ public class CodecKitTest {
 
     @Test
     public void test3Des() {
-        String key = "eUGeNebeRrYKiTc23zHnjAVa0323MKzM";
-//        String idCard = "100015";
-        String idCard = "100021";
-        String encode = CodecKitTest.codecKit.encode3Des(key);
-//        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
-        System.out.println(encode);
+//        String key = "eUGeNebeRrYKiTc23zHnjAVa0323MKzM";
+////        String idCard = "100015";
+//        String idCard = "100021";
+//        String encode = CodecKitTest.codecKit.encode3Des(key);
+////        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
+//        System.out.println(encode);
 
-//        String defaultVal = "18980ssf840323eA";
-//        String encodeDafault = this.codecKit.encode3Des(defaultVal);
+        String defaultVal = "18980ssf840323eA";
+        String encodeDafault = this.codecKit.encode3Des(defaultVal);
 //        Assert.assertEquals(defaultVal, this.codecKit.decode3Des(encodeDafault));
     }
 
