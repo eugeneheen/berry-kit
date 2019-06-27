@@ -94,6 +94,31 @@ public class JsonKitTest {
     }
 
     @Test
+    public void testReadCollectionObjectAsCollection(){
+        List<User> users = new ArrayList<>();
+        User eugene = new User();
+        eugene.setName("Eugene");
+        eugene.setAge(20);
+
+        User king = new User();
+        king.setName("King");
+        king.setAge(22);
+
+        users.add(eugene);
+        users.add(king);
+
+        try {
+            List<User> list = jsonKit.readAsCollection(users, List.class, User.class);
+            Assert.assertNotNull(list);
+            Assert.assertNull(list.get(0).getDesc());
+            Assert.assertNotNull(list.get(0).getName());
+            Assert.assertEquals(2, list.size());
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testReadinputStreamAsCollection(){
         InputStream inputStream = ClassLoader.getSystemResourceAsStream("users.txt");
         try {
