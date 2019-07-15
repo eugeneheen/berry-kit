@@ -90,7 +90,9 @@ public class CodecKit {
     public byte [] hex2Bytes(String source, String algorithms) {
         byte [] sourceHexBytes = this.hex(source, algorithms).getBytes();
         byte [] clonesourceHexBytes = new byte [24];
-        System.arraycopy(sourceHexBytes, 0, clonesourceHexBytes, 0, sourceHexBytes.length);
+        for (int i = 0; i < 24; i++) {
+            clonesourceHexBytes[i] = sourceHexBytes[i];
+        }
         return clonesourceHexBytes;
     }
 

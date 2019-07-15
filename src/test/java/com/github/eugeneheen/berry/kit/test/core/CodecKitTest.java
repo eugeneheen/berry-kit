@@ -41,8 +41,11 @@ public class CodecKitTest {
 ////        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
 //        System.out.println(encode);
 
-        String defaultVal = "18980ssf840323eA";
+        String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
         String encodeDafault = this.codecKit.encode3Des(defaultVal);
+        System.out.println(encodeDafault);
+        String decode3Des = this.codecKit.decode3Des(encodeDafault);
+        System.out.println(decode3Des);
 //        Assert.assertEquals(defaultVal, this.codecKit.decode3Des(encodeDafault));
     }
 
