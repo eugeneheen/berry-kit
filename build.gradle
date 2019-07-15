@@ -29,7 +29,7 @@ ext {
     commonsIOVersion = '2.6'
 
     //CommonsCodec
-    commonsCodecVersion = '1.11'
+    commonsCodecVersion = '1.12'
 
     //CommonsText
     commonsTextVersion = '1.4'
