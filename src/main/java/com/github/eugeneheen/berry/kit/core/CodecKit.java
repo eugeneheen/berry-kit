@@ -43,6 +43,16 @@ public class CodecKit {
     public static final String ALGORITHMS_DESEDE = "DESede";
 
     /**
+     * AES算法
+     */
+    public static final String ALGORITHMS_AES = "AES";
+
+    /**
+     * AES/ECB/PKCS5Padding算法
+     */
+    public static final String ALGORITHMS_AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
+
+    /**
      * 3DES默认加密Key
      */
     public static final String EDES_DEFAULT_KEY = "eUGeNebeRrYKiTc23zHnjAVa";
@@ -182,11 +192,49 @@ public class CodecKit {
     }
 
     /**
+     * 3DES-AES加密
+     * @param key 加密Key(自定义)
+     * @param srcStr 待加密字符串(24字节)
+     * @return 3DES加密后的字符串
+     */
+    public String encode3DesAes(String key, String srcStr) {
+        try {
+            byte [] keyBytes = key.getBytes();
+            byte [] srcStrBytes = srcStr.getBytes();
+            // 生成密钥
+            SecretKey deskey = new SecretKeySpec(keyBytes, CodecKit.ALGORITHMS_AES);
+            //加密
+            Cipher cipher = Cipher.getInstance(CodecKit.ALGORITHMS_AES_ECB_PKCS5PADDING);
+            cipher.init(Cipher.ENCRYPT_MODE, deskey);
+            return this.encodeBase64(cipher.doFinal(srcStrBytes));
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("3DES加密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("3DES加密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("3DES加密发生错误", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CodecException("3DES加密发生发生错误", e);
+        } catch (BadPaddingException e) {
+            throw new CodecException("3DES加密发生发生错误", e);
+        }
+    }
+
+    /**
      * 3DES加密(使用默认加密Key)
      * @param srcStr 待加密字符串(24字节)
      * @return 3DES加密后的字符串
      */
     public String encode3Des(String srcStr) {
+        return this.encode3Des(CodecKit.EDES_DEFAULT_KEY, srcStr);
+    }
+
+    /**
+     * 3DES-AES加密(使用默认加密Key)
+     * @param srcStr 待加密字符串(24字节)
+     * @return 3DES加密后的字符串
+     */
+    public String encode3DesAes(String srcStr) {
         return this.encode3Des(CodecKit.EDES_DEFAULT_KEY, srcStr);
     }
 
@@ -220,12 +268,50 @@ public class CodecKit {
     }
 
     /**
+     * 3DES-AES解密
+     * @param key 加密Key(自定义)
+     * @param encodeStr 3DES加密后的字符串
+     * @return 原始字符串
+     */
+    public String decode3DesAes(String key, String encodeStr) {
+        try {
+            byte [] keyBytes = key.getBytes();
+            byte [] encodeStrBytes = this.decodeBase64Bytes(encodeStr);
+            // 生成密钥
+            SecretKey deskey = new SecretKeySpec(keyBytes, CodecKit.ALGORITHMS_AES);
+            //加密
+            Cipher cipher = Cipher.getInstance(CodecKit.ALGORITHMS_AES_ECB_PKCS5PADDING);
+            cipher.init(Cipher.DECRYPT_MODE, deskey);
+            return new String(cipher.doFinal(encodeStrBytes));
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("3DES解密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("3DES解密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("3DES解密发生错误", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CodecException("3DES解密发生发生错误", e);
+        } catch (BadPaddingException e) {
+            throw new CodecException("3DES解密发生发生错误", e);
+        }
+    }
+
+    /**
      * 3DES解密(使用默认加密Key)
      * @param encodeStr 3DES加密后的字符串
      * @return 原始字符串
      */
     public String decode3Des(String encodeStr) {
         return this.decode3Des(CodecKit.EDES_DEFAULT_KEY, encodeStr);
+    }
+
+    /**
+     * 3DES-AES解密(使用默认加密Key)
+     * @param encodeStr 3DES加密后的字符串
+     * @return 原始字符串
+     */
+    public String decode3DesAes(String encodeStr) {
+        return this.decode3DesAes(CodecKit.EDES_DEFAULT_KEY, encodeStr);
     }
 
     /**

@@ -42,9 +42,15 @@ public class CodecKitTest {
 //        System.out.println(encode);
 
         String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
-        String encodeDafault = this.codecKit.encode3Des(defaultVal);
+        String encodeDafault = this.codecKit.encode3Des("avc", defaultVal);
         System.out.println(encodeDafault);
-        String decode3Des = this.codecKit.decode3Des(encodeDafault);
+        String decode3Des = this.codecKit.decode3Des("avc", encodeDafault);
+        System.out.println(decode3Des);
+
+
+        encodeDafault = this.codecKit.encode3DesAes("abcdefgabcdefg12", "{\"name\":\"测试\",\"userName\":\"code\",\"nickName\":\"CODE\",\"passwrod\":\"\",\"mobileNo\":\"111111111111\",\"gender\":\"1\",\"birthday\":\"2019-07-15T16:00:00.000Z\",\"identityCardNo\":\"111111111111\",\"registerChannel\":-1,\"provinceCode\":\"130000\",\"provinceName\":\"河北省\",\"cityCode\":\"\",\"cityName\":\"\",\"regionCode\":\"\",\"regionName\":\"\",\"creator\":\"13a0cd1c8ec98a6ee7f2d4c1a3a1fbc0\",\"parentId\":\"\",\"password\":\"d41d8cd98f00b204e9800998ecf8427e\"}");
+        System.out.println(encodeDafault);
+        decode3Des = this.codecKit.decode3DesAes("abcdefgabcdefg12", encodeDafault);
         System.out.println(decode3Des);
 //        Assert.assertEquals(defaultVal, this.codecKit.decode3Des(encodeDafault));
     }
