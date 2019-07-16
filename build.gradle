@@ -52,8 +52,6 @@ ext {
 
     jjwtVersion = '0.9.1'
 
-    okhttp3Version = '3.11.0'
-
     //Junit
     junitVersion = '4.12'
 
