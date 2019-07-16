@@ -5,6 +5,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -15,6 +16,7 @@ repositories {
     maven {
         url 'http://maven.aliyun.com/nexus/content/groups/public/'
     }
+    mavenLocal()
 }
 
 ext {
@@ -112,6 +114,23 @@ def getRepositoryUsername() {
 
 def getRepositoryPassword() {
     return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId GROUP
+            artifactId POM_ARTIFACT_ID
+            version VERSION_NAME
+
+            from components.java
+            // more goes in here
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }
 
 afterEvaluate { project ->
