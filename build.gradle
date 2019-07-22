@@ -56,7 +56,7 @@ ext {
     junitVersion = '4.12'
 
     //Lombok
-    lombokVersion = '1.18.2'
+    lombokVersion = '1.18.8'
 
     //ServletAPI
     servletApiVersion = '4.0.1'
@@ -74,10 +74,12 @@ dependencies {
         "org.apache.commons:commons-collections4:$commonsCollections4Version",
         "org.apache.commons:commons-text:$commonsTextVersion",
         "commons-codec:commons-codec:$commonsCodecVersion",
-        "com.squareup.okhttp3:okhttp:$okhttp3Version",
-        "javax.servlet:javax.servlet-api:$servletApiVersion"    
+        "javax.servlet:javax.servlet-api:$servletApiVersion"
 
     )
+
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     compileOnly (
         "org.projectlombok:lombok:$lombokVersion"
