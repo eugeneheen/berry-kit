@@ -22,9 +22,9 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * <p>
- * 加密解密工具箱，提供了常用的加解密算法实现<br>
+ * 加密解密工具箱，提供了常用的加解密算法实现。<br>
  * 由于MD5 与SHA-1均是从MD4 发展而来，它们的结构和强度等特性有很多相似之处，
- * SHA-1与MD5 的最大区别在于其摘要比MD5 摘要长 32 比特（1byte=8bit，相当于长4byte，转换16进制后比MD5多8个字符）。
+ * SHA-1与MD5 的最大区别在于其摘要比MD5 摘要长 32 比特（1byte=8bit，相当于长4byte，转换16进制后比MD5多8个字符）。<br>
  * 对于强行攻击，MD5 是2128 数量级的操作，SHA-1 是2160数量级的操作，
  * 对于相同摘要的两个报文的难度：MD5是 264 是数量级的操作，SHA-1 是280 数量级的操作。
  * 因而，SHA-1 对强行攻击的强度更大。 但由于SHA-1 的循环步骤比MD5 多（80:64）且要处理的缓存大（160 比特:128 比特），SHA-1 的运行速度比MD5 慢。
@@ -41,10 +41,10 @@ public class CodecKit {
     }
 
     /**
-     * 通过指定的算法进行16进制编码，如果指定了不支持的算法将返回null值
+     * <p>通过指定的算法进行16进制编码，如果指定了不支持的算法将返回null值</p>
      *
      * @param bytes      待编码的byte字节数组
-     * @param algorithms 编码算法，详见：{@link AlgorithmsEnum}，支持MD5、SHA1
+     * @param algorithms 编码算法，支持算法：{@link AlgorithmsEnum#MD5}、{@link AlgorithmsEnum#SHA1}
      * @return 已编码的16进制字符串
      */
     public String hex(byte[] bytes, AlgorithmsEnum algorithms) {
@@ -59,10 +59,10 @@ public class CodecKit {
     }
 
     /**
-     * 通过指定的算法进行16进制编码，如果指定了不支持的算法将返回null值
+     * <p>通过指定的算法进行16进制编码，如果指定了不支持的算法将返回null值</p>
      *
      * @param source     需要加密的字符串
-     * @param algorithms 编码算法，详见：{@link AlgorithmsEnum}，支持MD5、SHA1
+     * @param algorithms 编码算法，支持算法：{@link AlgorithmsEnum#MD5}、{@link AlgorithmsEnum#SHA1}
      * @return 已编码的16进制字符串
      */
     public String hex(String source, AlgorithmsEnum algorithms) {
@@ -70,10 +70,10 @@ public class CodecKit {
     }
 
     /**
-     * 转换16进制字符串为字节数组
+     * <p>转换16进制字符串为字节数组</p>
      *
      * @param source     待转换的字符串
-     * @param algorithms 编码算法，通过ALGORITHMS_MD5、ALGORITHMS_SHA1等常量指定
+     * @param algorithms 编码算法，支持算法：{@link AlgorithmsEnum#MD5}、{@link AlgorithmsEnum#SHA1}
      * @return 字节数组
      */
     public byte[] hex2Bytes(String source, AlgorithmsEnum algorithms) {
@@ -87,7 +87,7 @@ public class CodecKit {
 
 
     /**
-     * Base64编码加密
+     * <p>Base64编码加密</p>
      *
      * @param bytes 需要加密的字节数组
      * @return Base64加密后的字符串
@@ -97,7 +97,7 @@ public class CodecKit {
     }
 
     /**
-     * Base64编码加密
+     * <p>Base64编码加密</p>
      *
      * @param text 需要加密的字符串
      * @return Base64加密后的字符串
@@ -107,7 +107,7 @@ public class CodecKit {
     }
 
     /**
-     * Base64编码解密
+     * <p>Base64编码解密</p>
      *
      * @param text 需要加密的字符串
      * @return Base64加密后的字符串
@@ -117,7 +117,7 @@ public class CodecKit {
     }
 
     /**
-     * Base64编码解密
+     * <p>Base64编码解密</p>
      *
      * @param bytes 需要解密的Base64字节数组
      * @return 加密前的原始字符串
@@ -127,7 +127,7 @@ public class CodecKit {
     }
 
     /**
-     * Base64编码解密
+     * <p>Base64编码解密</p>
      *
      * @param bytes 需要解密的Base64字节数组
      * @return 加密前的原始字符串
@@ -137,7 +137,7 @@ public class CodecKit {
     }
 
     /**
-     * Base64编码解密
+     * <p>Base64编码解密</p>
      *
      * @param base64Str 需要解密的Base64字符串
      * @return 加密前的原始字符串
@@ -149,8 +149,8 @@ public class CodecKit {
     /**
      * <p>生成SecretKeySpec类型AES密钥</p>
      *
-     * @param key 密钥
-     * @param digits     加密位数，详见：{@link DigitsEnum}
+     * @param key    密钥
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
      * @return SecretKeySpec类型的密钥
      * @throws CodecException 抛出CodecKit工具类统一的运行时异常
      * @see NoSuchAlgorithmException 生成密钥使用的算法无法解析
@@ -158,7 +158,7 @@ public class CodecKit {
     public SecretKeySpec genAesKey(String key, DigitsEnum digits) {
 
         try {
-            byte [] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
             // 密钥生成器
             KeyGenerator keyGen = KeyGenerator.getInstance(AlgorithmsEnum.AES.getAlgorithms());
             // 初始化密钥生成器
@@ -166,7 +166,7 @@ public class CodecKit {
             // 生成密钥
             SecretKey secretKey = keyGen.generateKey();
             // 密钥字节数组
-            byte [] keyByts = secretKey.getEncoded();
+            byte[] keyByts = secretKey.getEncoded();
             return new SecretKeySpec(keyByts, AlgorithmsEnum.AES.getAlgorithms());
         } catch (NoSuchAlgorithmException e) {
             throw new CodecException("生成AES密钥，算法无法解析", e);
@@ -205,8 +205,8 @@ public class CodecKit {
     /**
      * <p>DES加解密</p>
      *
-     * @param mode 加解密模式，详见:{@link Cipher}；加密模式：ENCRYPT_MODE；解密模式：DECRYPT_MODE
-     * @param key  加解密密钥
+     * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
+     * @param key  密钥
      * @param data 加解密数据
      * @return 加密解密后的数据
      */
@@ -242,10 +242,10 @@ public class CodecKit {
     }
 
     /**
-     * 3DES加密
+     * <p>3DES加密</p>
      *
-     * @param key    加密Key(自定义)
-     * @param srcStr 待加密字符串(24字节)
+     * @param key    密钥
+     * @param srcStr 待加密字符串
      * @return 3DES加密后的字符串
      */
     public String des3Encrypt(String key, String srcStr) {
@@ -256,9 +256,9 @@ public class CodecKit {
     }
 
     /**
-     * 3DES解密
+     * <p>3DES解密</p>
      *
-     * @param key       加密Key(自定义)
+     * @param key       密钥
      * @param cryptText 3DES加密后的字符串
      * @return 原始字符串
      */
@@ -272,8 +272,8 @@ public class CodecKit {
     /**
      * <p>3DES加解密</p>
      *
-     * @param mode 加解密模式，详见:{@link Cipher}；加密模式：ENCRYPT_MODE；解密模式：DECRYPT_MODE
-     * @param key  加解密密钥
+     * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
+     * @param key  密钥
      * @param data 加解密数据
      * @return 加密解密后的数据
      */
@@ -309,72 +309,72 @@ public class CodecKit {
     }
 
     /**
-     * AES加密，默认128位长度的密钥
+     * <p>AES加密，默认128位长度的密钥</p>
      *
-     * @param key 密钥
+     * @param key  密钥
      * @param text 待加密的原始内容
      * @return AES加密后的内容
      */
     public String aesEncrypt(String key, String text) {
         SecretKeySpec keySpec = this.genAesKey(key, DigitsEnum.AES_128);
-        byte [] textBytes = text.getBytes(StandardCharsets.UTF_8);
-        byte [] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
         return this.encodeBase64(encryptBytes);
     }
 
     /**
-     * AES加密，使用指定长度的密钥
+     * <p>AES加密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesEncrypt(String, String)}</p>
      *
-     * @param key 密钥
-     * @param digits 密钥长度，获得无政策权限后可设置为192或256的长度
-     * @param text 待加密的原始内容
+     * @param key    密钥
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
+     * @param text   待加密的原始内容
      * @return AES加密后的内容
      */
     public String aesEncrypt(String key, DigitsEnum digits, String text) {
         SecretKeySpec keySpec = this.genAesKey(key, digits);
-        byte [] textBytes = text.getBytes(StandardCharsets.UTF_8);
-        byte [] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
         return this.encodeBase64(encryptBytes);
     }
 
     /**
-     * AES解密，默认128位长度的密钥
+     * <p>AES解密，默认128位长度的密钥</p>
      *
-     * @param key 密钥
+     * @param key       密钥
      * @param cryptText AES加密后的字符串
      * @return AES加密前的原始内容
      */
     public String aesDecrypt(String key, String cryptText) {
         SecretKeySpec keySpec = this.genAesKey(key, DigitsEnum.AES_128);
-        byte [] textBytes = this.decodeBase64Bytes(cryptText);
-        byte [] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
+        byte[] textBytes = this.decodeBase64Bytes(cryptText);
+        byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
-     * AES解密，使用指定长度的密钥
+     * <p>AES解密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesEncrypt(String, String)}</p>
      *
-     * @param key 密钥
-     * @param digits 密钥长度，获得无政策权限后可设置为192或256的长度
+     * @param key       密钥
+     * @param digits    加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
      * @param cryptText AES加密后的字符串
      * @return AES加密前的原始内容
      */
     public String aesDecrypt(String key, DigitsEnum digits, String cryptText) {
         SecretKeySpec keySpec = this.genAesKey(key, digits);
-        byte [] textBytes = this.decodeBase64Bytes(cryptText);
-        byte [] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
+        byte[] textBytes = this.decodeBase64Bytes(cryptText);
+        byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
      * <p>AES加解密</p>
      *
-     * @param mode 加解密模式，详见:{@link Cipher}；加密模式：ENCRYPT_MODE；解密模式：DECRYPT_MODE
-     * @param key  加解密密钥
+     * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
+     * @param key  {@link SecretKeySpec}密钥，使用{@link CodecKit#genAesKey(String, DigitsEnum)}快速创建密钥
      * @param data 加解密数据
      * @return 加密解密后的数据
      */
-    public byte [] aesEncryptOrDecrypt(int mode, SecretKeySpec key, byte [] data) {
+    public byte[] aesEncryptOrDecrypt(int mode, SecretKeySpec key, byte[] data) {
         try {
             Cipher cipher = Cipher.getInstance(AlgorithmsEnum.AES.getAlgorithms());
             cipher.init(mode, key);
@@ -393,7 +393,7 @@ public class CodecKit {
     }
 
     /**
-     * 解码URL地址
+     * <p>解码URL地址</p>
      *
      * @param encodedUrl 已编码的URL地址
      * @param charset    编码字符集
@@ -406,7 +406,7 @@ public class CodecKit {
     }
 
     /**
-     * 解码URL地址，默认使用UTF-8编码
+     * <p>解码URL地址，默认使用UTF-8编码</p>
      *
      * @param encodedUrl 已编码的URL地址
      * @return 已解码的URL
@@ -418,7 +418,7 @@ public class CodecKit {
     }
 
     /**
-     * 编码URL地址
+     * <p>编码URL地址</p>
      *
      * @param url     URL地址
      * @param charset 编码字符集
@@ -430,7 +430,7 @@ public class CodecKit {
     }
 
     /**
-     * 编码URL地址，默认使用UTF-8编码
+     * <p>编码URL地址，默认使用UTF-8编码</p>
      *
      * @param url URL地址
      * @return 已编码的URL
