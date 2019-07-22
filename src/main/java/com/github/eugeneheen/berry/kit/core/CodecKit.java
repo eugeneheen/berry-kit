@@ -207,10 +207,10 @@ public class CodecKit {
      *
      * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
      * @param key  密钥
-     * @param data 加解密数据
+     * @param text 加解密数据
      * @return 加密解密后的数据
      */
-    public byte[] desEncryptOrDecrypt(int mode, byte[] key, byte[] data) {
+    public byte[] desEncryptOrDecrypt(int mode, byte[] key, byte[] text) {
         try {
             // 随机数生成器（RNG）
             SecureRandom random = new SecureRandom();
@@ -221,11 +221,11 @@ public class CodecKit {
             // 得到密钥对象
             SecretKey secretKey = secretKeyFactory.generateSecret(desKeySpec);
             // Cipher对象实际完成加密操作
-            Cipher cipher = Cipher.getInstance(AlgorithmsEnum.DES.getAlgorithms());
+            Cipher cipher = Cipher.getInstance(AlgorithmsEnum.DES_CIPHER.getAlgorithms());
             // 用密匙初始化Cipher对象
             cipher.init(mode, secretKey, random);
             // 获取数据并加密，正式执行加密操作
-            return cipher.doFinal(data);
+            return cipher.doFinal(text);
         } catch (InvalidKeyException e) {
             throw new CodecException("DES加解密Key无效", e);
         } catch (NoSuchAlgorithmException e) {
@@ -274,10 +274,10 @@ public class CodecKit {
      *
      * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
      * @param key  密钥
-     * @param data 加解密数据
+     * @param text 加解密数据
      * @return 加密解密后的数据
      */
-    public byte[] des3EncryptOrDecrypt(int mode, byte[] key, byte[] data) {
+    public byte[] des3EncryptOrDecrypt(int mode, byte[] key, byte[] text) {
         try {
             // 随机数生成器（RNG）
             SecureRandom random = new SecureRandom();
@@ -292,7 +292,7 @@ public class CodecKit {
             // 用密匙初始化Cipher对象
             cipher.init(mode, secretKey, random);
             // 获取数据并加密，正式执行加密操作
-            return cipher.doFinal(data);
+            return cipher.doFinal(text);
         } catch (InvalidKeyException e) {
             throw new CodecException("3DES加解密Key无效", e);
         } catch (NoSuchAlgorithmException e) {
@@ -371,14 +371,14 @@ public class CodecKit {
      *
      * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
      * @param key  {@link SecretKeySpec}密钥，使用{@link CodecKit#genAesKey(String, DigitsEnum)}快速创建密钥
-     * @param data 加解密数据
+     * @param text 加解密数据
      * @return 加密解密后的数据
      */
-    public byte[] aesEncryptOrDecrypt(int mode, SecretKeySpec key, byte[] data) {
+    public byte[] aesEncryptOrDecrypt(int mode, SecretKeySpec key, byte[] text) {
         try {
             Cipher cipher = Cipher.getInstance(AlgorithmsEnum.AES.getAlgorithms());
             cipher.init(mode, key);
-            return cipher.doFinal(data);
+            return cipher.doFinal(text);
         } catch (NoSuchAlgorithmException e) {
             throw new CodecException("AES加解密发生使用不支持的编码算法发生错误", e);
         } catch (NoSuchPaddingException e) {

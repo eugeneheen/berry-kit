@@ -10,9 +10,34 @@ import lombok.Getter;
  */
 @Getter
 public enum AlgorithmsEnum {
-    MD5("md5"), SHA1("sha1"), DES("DES"), DESEDE("DESede"), AES("AES"),
-    ALGORITHMS_AES_ECB_PKCS5PADDING("AES/ECB/PKCS5Padding");
+    /**
+     * MD5加密算法
+     */
+    MD5("md5"),
+    /**
+     * SHA1加密算法
+     */
+    SHA1("sha1"),
+    /**
+     * DES密钥算法
+     */
+    DES("DES"),
+    /**
+     * DESede密钥算法
+     */
+    DESEDE("DESede"),
+    /**
+     * AES密钥算法
+     */
+    AES("AES"),
+    /**
+     * DES-Cipher，加密 / 解密算法 / 工作模式 / 填充方式
+     */
+    DES_CIPHER("DES/ECB/PKCS5Padding");
 
+    /**
+     * 算法值
+     */
     private String algorithms;
 
     AlgorithmsEnum(String algorithms) {
