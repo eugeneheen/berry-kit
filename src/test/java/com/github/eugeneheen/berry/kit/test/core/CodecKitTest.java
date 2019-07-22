@@ -1,12 +1,14 @@
 package com.github.eugeneheen.berry.kit.test.core;
 
 import com.github.eugeneheen.berry.kit.core.CodecKit;
+import com.github.eugeneheen.berry.kit.enumeration.DigitsEnum;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 
 public class CodecKitTest {
@@ -33,44 +35,66 @@ public class CodecKitTest {
     }
 
     @Test
-    public void test3Des() {
-//        String key = "eUGeNebeRrYKiTc23zHnjAVa0323MKzM";
-////        String idCard = "100015";
-//        String idCard = "100021";
-//        String encode = CodecKitTest.codecKit.encode3Des(key);
-////        Assert.assertEquals(idCard, CodecKitTest.codecKit.decode3Des(key, encode));
-//        System.out.println(encode);
+    public void testGenSecretKey() {
+        final String KEY = "eugenHeen_123456";
+        SecretKeySpec keySpec = codecKit.genAesKey(KEY, DigitsEnum.AES_128);
+        Assert.assertNotNull(keySpec);
+        keySpec = codecKit.genAesKey(KEY, DigitsEnum.AES_128);
+        Assert.assertNotNull(keySpec);
+    }
+
+
+
+    @Test
+    public void testDES() {
+        final String KEY = "eugenHeen_123456";
+        final String META = "Test_DES_EncodeAndDecode";
+        String crypyText = codecKit.desEncrypt(KEY, META);
+        Assert.assertNotNull(crypyText);
+        String metaText = codecKit.desDecrypt(KEY, crypyText);
+        Assert.assertEquals(META, metaText);
+    }
+
+    @Test
+    public void test3DES() {
+        String KEY = "eUGeNebeRrYKiTc22";
 
         String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
-        String encodeDafault = this.codecKit.encode3Des("avc", defaultVal);
-        System.out.println(encodeDafault);
-        String decode3Des = this.codecKit.decode3Des("avc", encodeDafault);
-        System.out.println(decode3Des);
+        String encodeDafault = this.codecKit.des3Encrypt(KEY, defaultVal);
+        Assert.assertNotNull(encodeDafault);
+        String decode3Des = codecKit.des3Decrypt(KEY, encodeDafault);
+        Assert.assertEquals(defaultVal, decode3Des);
 
+        defaultVal = "{\"name\":\"测试\",\"userName\":\"code\",\"nickName\":\"CODE\",\"passwrod\":\"\",\"mobileNo\":\"111111111111\",\"gender\":\"1\",\"birthday\":\"2019-07-15T16:00:00.000Z\",\"identityCardNo\":\"111111111111\",\"registerChannel\":-1,\"provinceCode\":\"130000\",\"provinceName\":\"河北省\",\"cityCode\":\"\",\"cityName\":\"\",\"regionCode\":\"\",\"regionName\":\"\",\"creator\":\"13a0cd1c8ec98a6ee7f2d4c1a3a1fbc0\",\"parentId\":\"\",\"password\":\"d41d8cd98f00b204e9800998ecf8427e\"}";
+        encodeDafault = codecKit.des3Encrypt(KEY, defaultVal);
+        Assert.assertNotNull(encodeDafault);
+        decode3Des = codecKit.des3Decrypt(KEY, encodeDafault);
+        Assert.assertEquals(defaultVal, decode3Des);
+    }
 
-        encodeDafault = this.codecKit.encode3DesAes("abcdefgabcdefg12", "{\"name\":\"测试\",\"userName\":\"code\",\"nickName\":\"CODE\",\"passwrod\":\"\",\"mobileNo\":\"111111111111\",\"gender\":\"1\",\"birthday\":\"2019-07-15T16:00:00.000Z\",\"identityCardNo\":\"111111111111\",\"registerChannel\":-1,\"provinceCode\":\"130000\",\"provinceName\":\"河北省\",\"cityCode\":\"\",\"cityName\":\"\",\"regionCode\":\"\",\"regionName\":\"\",\"creator\":\"13a0cd1c8ec98a6ee7f2d4c1a3a1fbc0\",\"parentId\":\"\",\"password\":\"d41d8cd98f00b204e9800998ecf8427e\"}");
-        System.out.println(encodeDafault);
-        decode3Des = this.codecKit.decode3DesAes("abcdefgabcdefg12", encodeDafault);
-        System.out.println(decode3Des);
-//        Assert.assertEquals(defaultVal, this.codecKit.decode3Des(encodeDafault));
+    @Test
+    public void testAES() {
+        String KEY = "eUGeNebeRrYKiTc22";
+        String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
+
+        String encrypt = codecKit.aesEncrypt(KEY, defaultVal);
+        Assert.assertNotNull(encrypt);
+        String decrypt = codecKit.aesDecrypt(KEY, encrypt);
+        Assert.assertEquals(defaultVal, decrypt);
+
+        encrypt = codecKit.aesEncrypt(KEY, DigitsEnum.AES_192, defaultVal);
+        Assert.assertNotNull(encrypt);
+        decrypt = codecKit.aesDecrypt(KEY, DigitsEnum.AES_192, encrypt);
+        Assert.assertEquals(defaultVal, decrypt);
     }
 
     @Test
     public void testEncodeUrl() {
-//        try {
-//            String encodeUrl = CodecKitTest.codecKit.encodeUrl("http://demo.trevet.cn/account/register/SN7KNIPsk845dPkfEwdZ5A==/xxxx");
-//            System.out.println(encodeUrl);
-//            String decodeUrl = CodecKitTest.codecKit.decodeUrl(encodeUrl);
-//            System.out.println(decodeUrl);
-//            System.out.println("081jFcl90MpkPw1H0El90R9wl90jFclk".length());
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        } catch (DecoderException e) {
-//            e.printStackTrace();
-//        }
+        final String url = "http://demo.trevet.cn/account/register/SN7KNIPsk845dPkfEwdZ5A==/xxxx";
         try {
-            String url =  CodecKitTest.codecKit.decodeUrl("http%3A%2F%2Fwx.toyou.net%2Frouter%2Fregister%2Fproxy%2F1%2F100027");
-            System.out.println(url);
+            String encodeUrl = CodecKitTest.codecKit.encodeUrl(url);
+            String decodeUrl =  CodecKitTest.codecKit.decodeUrl(encodeUrl);
+            Assert.assertEquals(url, decodeUrl);
         } catch (DecoderException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
