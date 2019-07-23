@@ -2,6 +2,7 @@ package com.github.eugeneheen.berry.kit.test.core;
 
 import com.github.eugeneheen.berry.kit.core.CodecKit;
 import com.github.eugeneheen.berry.kit.enumeration.DigitsEnum;
+import com.github.eugeneheen.berry.kit.enumeration.SecretKeyTypeEnum;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
@@ -10,6 +11,10 @@ import org.junit.Test;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.security.interfaces.RSAKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Map;
 
 public class CodecKitTest {
     private static CodecKit codecKit;
@@ -86,6 +91,52 @@ public class CodecKitTest {
         Assert.assertNotNull(encrypt);
         decrypt = codecKit.aesDecrypt(KEY, DigitsEnum.AES_192, encrypt);
         Assert.assertEquals(defaultVal, decrypt);
+    }
+
+    @Test
+    public void testRSA() {
+        // 默认加密因子
+        Map<String, RSAKey> rsaKeys = codecKit.genRestoreRsaKeys(DigitsEnum.RSA_4096);
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) rsaKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType());
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) rsaKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType());
+
+        Map<String, String> rsaStringKeys = codecKit.genRsaKeys(DigitsEnum.RSA_4096);
+        System.out.println("================================");
+        System.out.println("私钥：" + rsaStringKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType()));
+        System.out.println("公钥：" + rsaStringKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType()));
+        System.out.println("================================");
+
+        final String meta = "这是一个<Good Food>!---------_So Key....两个黄鹂鸣翠柳，一行白鹭上青天。窗含西岭千秋雪，门泊东吴万里船。";
+        String privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPrivateKey);
+        Assert.assertNotNull(privateKeyEncrypt);
+        String metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPublicKey);
+        Assert.assertEquals(meta, metaStr);
+
+        privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPublicKey);
+        Assert.assertNotNull(privateKeyEncrypt);
+        metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPrivateKey);
+        Assert.assertEquals(meta, metaStr);
+
+        // 自定义加密因子
+        final String SEED = "%$#^*#^%()_(_CXzT8eugeneHeEN4";
+        rsaKeys = codecKit.genRestoreRsaKeys(DigitsEnum.RSA_4096, SEED);
+        rsaPrivateKey = (RSAPrivateKey) rsaKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType());
+        rsaPublicKey = (RSAPublicKey) rsaKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType());
+
+        rsaStringKeys = codecKit.genRsaKeys(DigitsEnum.RSA_4096, SEED);
+        System.out.println("私钥：" + rsaStringKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType()));
+        System.out.println("公钥：" + rsaStringKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType()));
+        System.out.println("================================");
+
+        privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPrivateKey);
+        Assert.assertNotNull(privateKeyEncrypt);
+        metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPublicKey);
+        Assert.assertEquals(meta, metaStr);
+
+        privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPublicKey);
+        Assert.assertNotNull(privateKeyEncrypt);
+        metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPrivateKey);
+        Assert.assertEquals(meta, metaStr);
     }
 
     @Test

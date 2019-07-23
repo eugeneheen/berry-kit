@@ -2,6 +2,7 @@ package com.github.eugeneheen.berry.kit.core;
 
 import com.github.eugeneheen.berry.kit.enumeration.AlgorithmsEnum;
 import com.github.eugeneheen.berry.kit.enumeration.DigitsEnum;
+import com.github.eugeneheen.berry.kit.enumeration.SecretKeyTypeEnum;
 import com.github.eugeneheen.berry.kit.exception.CodecException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
@@ -12,13 +13,20 @@ import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
+import java.security.interfaces.RSAKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,6 +41,11 @@ import java.security.spec.InvalidKeySpecException;
  * @author Eugene
  */
 public class CodecKit {
+
+    /**
+     * RSA加密默认种子
+     */
+    public static final String RSA_DEFAULT_SEED = "$%^*%^()(CXT8eugene4";
 
     /**
      * 构造方法
@@ -171,6 +184,109 @@ public class CodecKit {
         } catch (NoSuchAlgorithmException e) {
             throw new CodecException("生成AES密钥，算法无法解析", e);
         }
+    }
+
+    /**
+     * <p>还原RSA密钥</p>
+     * <p>RSA密钥对中存放的公钥或私钥，还原为{@link RSAPrivateKey}私钥或{@link RSAPublicKey}公钥。</p>
+     *
+     * @param rsaKey        RSA密钥对中获取的公钥（获取Key：{@link SecretKeyTypeEnum#PUBLIC_KEY}）或私钥（获取Key：{@link SecretKeyTypeEnum#PRIVATE_KEY}）。生成密钥对的方式使用：{@link CodecKit#genRsaKeys(DigitsEnum)}、{@link CodecKit#genRsaKeys(DigitsEnum, String)}
+     * @param secretKeyType 转换结果密钥类型，指定转换结果为私钥：{@link SecretKeyTypeEnum#PRIVATE_KEY}；指定转换结果为公钥：{@link SecretKeyTypeEnum#PUBLIC_KEY}
+     * @return {@link RSAPrivateKey}私钥或{@link RSAPublicKey}公钥
+     * @throws CodecException 密钥类型无法解析、算法无法解析、无效的密钥将抛出异常
+     */
+    public RSAKey restoreRsaKey(String rsaKey, SecretKeyTypeEnum secretKeyType) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance(AlgorithmsEnum.RSA.getAlgorithms());
+            switch (secretKeyType) {
+                case PRIVATE_KEY:
+                    // 通过PKCS#8编码的Key指令获得私钥对象
+                    PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(this.decodeBase64Bytes(rsaKey));
+                    return (RSAPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
+                case PUBLIC_KEY:
+                    // 通过X509编码的Key指令获得公钥对象
+                    X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(this.decodeBase64Bytes(rsaKey));
+                    return (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
+                default:
+                    throw new CodecException("转换RSA密钥，密钥类型无法解析");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("转换RSA密钥，算法无法解析", e);
+        } catch (InvalidKeySpecException e) {
+            throw new CodecException("转换RSA密钥，使用的Key无效", e);
+        }
+    }
+
+    /**
+     * <p>生成RSA密钥对，可通过{@link CodecKit#restoreRsaKey(String, SecretKeyTypeEnum)}还原已生成的密钥对</p>
+     *
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#RSA_2048}、{@link DigitsEnum#RSA_3072}、{@link DigitsEnum#RSA_4096}
+     * @param seed   加密种子，用户自定义。种子可包含特殊字符
+     * @return RSA密匙对：Map&lt;String, RSAKey&gt;，获取公钥使用Key：{@link SecretKeyTypeEnum#PUBLIC_KEY}；获取私钥使用Key：{@link SecretKeyTypeEnum#PRIVATE_KEY}
+     */
+    public Map<String, String> genRsaKeys(DigitsEnum digits, String seed) {
+        try {
+            //  RSA算法创建一个KeyPairGenerator对象
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(AlgorithmsEnum.RSA.getAlgorithms());
+            SecureRandom secureRandom = new SecureRandom();
+            secureRandom.setSeed(seed.getBytes(StandardCharsets.UTF_8));
+            keyPairGenerator.initialize(digits.getDigits(), secureRandom);
+            KeyPair keyPair = keyPairGenerator.genKeyPair();
+
+            Key privateKey = keyPair.getPrivate();
+            String privateStringKey = Base64.encodeBase64URLSafeString(privateKey.getEncoded());
+            Key publicKey = keyPair.getPublic();
+            String publicStringKey = Base64.encodeBase64URLSafeString(publicKey.getEncoded());
+            Map<String, String> keyPairMap = new HashMap<>(2);
+            keyPairMap.put(SecretKeyTypeEnum.PRIVATE_KEY.getType(), privateStringKey);
+            keyPairMap.put(SecretKeyTypeEnum.PUBLIC_KEY.getType(), publicStringKey);
+            return keyPairMap;
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("生成RSA密钥，算法无法解析", e);
+        }
+    }
+
+    /**
+     * <p>生成RSA密钥对，生成密匙对时使用默认加密种子{@link CodecKit#RSA_DEFAULT_SEED}。可通过{@link CodecKit#restoreRsaKey(String, SecretKeyTypeEnum)}还原已生成的密钥对</p>
+     *
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#RSA_2048}、{@link DigitsEnum#RSA_3072}、{@link DigitsEnum#RSA_4096}
+     * @return 包含公钥私钥的一个：Map&lt;String, String&gt;，获取公钥的Key：{@link SecretKeyTypeEnum#PUBLIC_KEY}；获取私钥的Key：{@link SecretKeyTypeEnum#PRIVATE_KEY}
+     */
+    public Map<String, String> genRsaKeys(DigitsEnum digits) {
+        return this.genRsaKeys(digits, CodecKit.RSA_DEFAULT_SEED);
+    }
+
+    /**
+     * <p>生成已还原的RSA密钥对</p>
+     *
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#RSA_2048}、{@link DigitsEnum#RSA_3072}、{@link DigitsEnum#RSA_4096}
+     * @param seed   加密种子，用户自定义。种子可包含特殊字符
+     * @return 包含已还原公钥私钥的一个：Map&lt;String, RSAKey&gt;，获取公钥的Key：{@link SecretKeyTypeEnum#PUBLIC_KEY}；获取私钥的Key：{@link SecretKeyTypeEnum#PRIVATE_KEY}
+     */
+    public Map<String, RSAKey> genRestoreRsaKeys(DigitsEnum digits, String seed) {
+        Map<String, String> keys = this.genRsaKeys(digits, seed);
+        String privateStringKey = keys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType());
+        String publicStringKey = keys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType());
+
+        // 通过PKCS#8编码的Key指令还原RSA私钥
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) this.restoreRsaKey(privateStringKey, SecretKeyTypeEnum.PRIVATE_KEY);
+        // 通过X509编码的Key指令还原RSA公钥
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) this.restoreRsaKey(publicStringKey, SecretKeyTypeEnum.PUBLIC_KEY);
+
+        Map<String, RSAKey> keyPairMap = new HashMap<>(2);
+        keyPairMap.put(SecretKeyTypeEnum.PRIVATE_KEY.getType(), rsaPrivateKey);
+        keyPairMap.put(SecretKeyTypeEnum.PUBLIC_KEY.getType(), rsaPublicKey);
+        return keyPairMap;
+    }
+
+    /**
+     * <p>生成已还原的RSA密钥对，生成密匙对时使用默认加密种子{@link CodecKit#RSA_DEFAULT_SEED}。</p>
+     *
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#RSA_2048}、{@link DigitsEnum#RSA_3072}、{@link DigitsEnum#RSA_4096}
+     * @return 包含已还原公钥私钥的一个：Map&lt;String, String&gt;，获取公钥的Key：{{@link SecretKeyTypeEnum#PUBLIC_KEY}；获取私钥的Key：{@link SecretKeyTypeEnum#PRIVATE_KEY}
+     */
+    public Map<String, RSAKey> genRestoreRsaKeys(DigitsEnum digits) {
+        return this.genRestoreRsaKeys(digits, CodecKit.RSA_DEFAULT_SEED);
     }
 
     /**
@@ -393,6 +509,57 @@ public class CodecKit {
     }
 
     /**
+     * <p>RSA加密</p>
+     *
+     * @param text 待加密的原始内容
+     * @param key  RSA密匙，RSA私钥：{@link RSAPrivateKey}、RSA公钥：{@link RSAPublicKey}
+     * @return RSA加密字符串
+     */
+    public String rsaEncrypt(String text, Key key) {
+        try {
+            Cipher cipher = Cipher.getInstance(AlgorithmsEnum.RSA.getAlgorithms());
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            int keySize = key instanceof RSAPrivateKey ? ((RSAPrivateKey) key).getModulus().bitLength() : ((RSAPublicKey) key).getModulus().bitLength();
+            byte[] splitCodecBytes = this.rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, text.getBytes(StandardCharsets.UTF_8), keySize);
+            return Base64.encodeBase64URLSafeString(splitCodecBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("RSA私钥加密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("RSA私钥加密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("RSA私钥加密Key无效", e);
+        }
+    }
+
+    /**
+     * <p>RSA解密</p>
+     * <p>RSA加密算法依赖一对公钥和私钥，加密与解密是相互对应的，模式如下：</p>
+     * <ul>
+     * <li>{@link RSAPublicKey}公钥加密，需要使用{@link RSAPrivateKey}私钥解密。</li>
+     * <li>{@link RSAPrivateKey}私钥加密，需要使用{@link RSAPublicKey}公钥解密。</li>
+     * </ul>
+     *
+     * @param cryptText RSA加密后的字符串
+     * @param key       RSA密匙，RSA私钥：{@link RSAPrivateKey}、RSA公钥：{@link RSAPublicKey}
+     * @return 原始字符串
+     */
+    public String rsaDecrypt(String cryptText, Key key) {
+        try {
+            Cipher cipher = Cipher.getInstance(AlgorithmsEnum.RSA.getAlgorithms());
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            int keySize = key instanceof RSAPrivateKey ? ((RSAPrivateKey) key).getModulus().bitLength() : ((RSAPublicKey) key).getModulus().bitLength();
+            byte[] splitCodecBytes = this.rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(cryptText), keySize);
+            return new String(splitCodecBytes, StandardCharsets.UTF_8);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CodecException("RSA公钥解密发生使用不支持的编码算法发生错误", e);
+        } catch (NoSuchPaddingException e) {
+            throw new CodecException("RSA公钥解密发生错误", e);
+        } catch (InvalidKeyException e) {
+            throw new CodecException("RSA公钥解密Key无效", e);
+        }
+    }
+
+    /**
      * <p>解码URL地址</p>
      *
      * @param encodedUrl 已编码的URL地址
@@ -439,4 +606,46 @@ public class CodecKit {
     public String encodeUrl(String url) throws UnsupportedEncodingException {
         return this.encodeUrl(url, StandardCharsets.UTF_8);
     }
+
+    /**
+     * RSA分割编解码器
+     *
+     * @param cipher  {@link Cipher}加密对象
+     * @param opmode  加密模式，支持模式：{@link Cipher#ENCRYPT_MODE}、{@link Cipher#DECRYPT_MODE}
+     * @param datas   加密数据
+     * @param keySize 密钥长度
+     * @return 分割后的byte[]字节数组
+     */
+    private byte[] rsaSplitCodec(Cipher cipher, int opmode, byte[] datas, int keySize) {
+        int maxBlock;
+        if (opmode == Cipher.DECRYPT_MODE) {
+            maxBlock = keySize / 8;
+        } else {
+            maxBlock = keySize / 8 - 11;
+        }
+
+        int offSet = 0;
+        byte[] buff;
+        int i = 0;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            while (datas.length > offSet) {
+                if (datas.length - offSet > maxBlock) {
+                    buff = cipher.doFinal(datas, offSet, maxBlock);
+                } else {
+                    buff = cipher.doFinal(datas, offSet, datas.length - offSet);
+                }
+                out.write(buff, 0, buff.length);
+                i++;
+                offSet = i * maxBlock;
+            }
+            return out.toByteArray();
+        } catch (BadPaddingException e) {
+            throw new CodecException("RSA加解密发生错误", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CodecException("RSA加解密发生错误", e);
+        } catch (IOException e) {
+            throw new CodecException("RSA加解密发生错误", e);
+        }
+    }
+
 }

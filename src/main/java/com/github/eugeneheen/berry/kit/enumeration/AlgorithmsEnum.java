@@ -31,6 +31,10 @@ public enum AlgorithmsEnum {
      */
     AES("AES"),
     /**
+     * RSA密钥算法
+     */
+    RSA("RSA"),
+    /**
      * DES-Cipher，加密 / 解密算法 / 工作模式 / 填充方式
      */
     DES_CIPHER("DES/ECB/PKCS5Padding");
