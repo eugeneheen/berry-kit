@@ -19,6 +19,10 @@ public enum AlgorithmsEnum {
      */
     SHA1("sha1"),
     /**
+     * SHA256加密算法
+     */
+    SHA256("SHA-256"),
+    /**
      * DES密钥算法
      */
     DES("DES"),
@@ -35,9 +39,25 @@ public enum AlgorithmsEnum {
      */
     RSA("RSA"),
     /**
+     * RSA密钥算法，结合SHA256算法实现
+     */
+    RSA_SHA256("SHA256withRSA"),
+    /**
      * DES-Cipher，加密 / 解密算法 / 工作模式 / 填充方式
      */
-    DES_CIPHER("DES/ECB/PKCS5Padding");
+    DES_CIPHER("DES/ECB/PKCS5Padding"),
+    /**
+     * 证书X.509算法
+     */
+    CERTIFICATE_X_509("X.509"),
+    /**
+     * 密钥库JKS证书
+     */
+    KEYSTORE_JKS("JKS"),
+    /**
+     * 密钥库PKCS12证书
+     */
+    KEYSTORE_PKCS12("PKCS12");
 
     /**
      * 算法值

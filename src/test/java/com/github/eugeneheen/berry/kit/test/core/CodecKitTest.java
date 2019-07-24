@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -107,14 +110,23 @@ public class CodecKitTest {
         System.out.println("================================");
 
         final String meta = "这是一个<Good Food>!---------_So Key....两个黄鹂鸣翠柳，一行白鹭上青天。窗含西岭千秋雪，门泊东吴万里船。";
+        final String metaError = "....两个黄鹂鸣翠柳，一行白鹭上青天。窗含西岭千秋雪，门泊东吴万里船。";
         String privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPrivateKey);
         Assert.assertNotNull(privateKeyEncrypt);
         String metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPublicKey);
+        Assert.assertEquals(meta, metaStr);
+        privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaStringKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType()), SecretKeyTypeEnum.PRIVATE_KEY);
+        Assert.assertNotNull(privateKeyEncrypt);
+        metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaStringKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType()), SecretKeyTypeEnum.PUBLIC_KEY);
         Assert.assertEquals(meta, metaStr);
 
         privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaPublicKey);
         Assert.assertNotNull(privateKeyEncrypt);
         metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPrivateKey);
+        Assert.assertEquals(meta, metaStr);
+        privateKeyEncrypt = codecKit.rsaEncrypt(meta, rsaStringKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType()), SecretKeyTypeEnum.PUBLIC_KEY);
+        Assert.assertNotNull(privateKeyEncrypt);
+        metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaStringKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType()), SecretKeyTypeEnum.PRIVATE_KEY);
         Assert.assertEquals(meta, metaStr);
 
         // 自定义加密因子
@@ -137,6 +149,57 @@ public class CodecKitTest {
         Assert.assertNotNull(privateKeyEncrypt);
         metaStr = codecKit.rsaDecrypt(privateKeyEncrypt, rsaPrivateKey);
         Assert.assertEquals(meta, metaStr);
+
+        // 验签
+        byte[] signed = codecKit.rsaSign(rsaPrivateKey, meta);
+        boolean result = codecKit.rsaVerifySign(rsaPublicKey, signed, meta);
+        Assert.assertTrue(result);
+
+        result = codecKit.rsaVerifySign(rsaPrivateKey, rsaPublicKey, meta);
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testCertificateKey() {
+        PrivateKey privateKey = codecKit.loadCertificatePrivateKey("eugene.jks", "eugene", "eugene@2019", "123456");
+        Assert.assertNotNull(privateKey);
+        PublicKey publicKey = codecKit.loadCertificatePublicKey("key/eugene.cer");
+        Assert.assertNotNull(publicKey);
+
+        String encryptPrivateKey = codecKit.loadEncryptCertificatePrivateKey("eugene.jks", "eugene", "eugene@2019", "123456");
+        Assert.assertNotNull(encryptPrivateKey);
+        String encryptPublicKey = codecKit.loadEncryptCertificatePublicKey("key/eugene.cer");
+        Assert.assertNotNull(encryptPublicKey);
+
+        Map<String, Key> keys = codecKit.loadCertificateKeys("eugene.jks", "key/eugene.cer", "eugene", "eugene@2019", "123456");
+        String encryptPrivateKeyNew = codecKit.certificateKeyEncrypt(keys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType()));
+        Assert.assertEquals(encryptPrivateKey, encryptPrivateKeyNew);
+        String encryptPublicKeyNew = codecKit.certificateKeyEncrypt(keys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType()));
+        Assert.assertEquals(encryptPublicKey, encryptPublicKeyNew);
+
+        Map<String, String> stringKeys = codecKit.loadEncryptCertificateKeys("eugene.jks", "key/eugene.cer", "eugene", "eugene@2019", "123456");
+        encryptPrivateKeyNew = stringKeys.get(SecretKeyTypeEnum.PRIVATE_KEY.getType());
+        Assert.assertEquals(encryptPrivateKey, encryptPrivateKeyNew);
+        encryptPublicKeyNew = stringKeys.get(SecretKeyTypeEnum.PUBLIC_KEY.getType());
+        Assert.assertEquals(encryptPublicKey, encryptPublicKeyNew);
+
+        // 公钥加密，私钥解密
+        final String meta = "这是一个<Good Food>!---------_So Key....两个黄鹂鸣翠柳，一行白鹭上青天。窗含西岭千秋雪，门泊东吴万里船。";
+        final String SEED = "%$#^*#^%()_(_CXzT8eugeneHeEN4";
+        String cryptText = codecKit.rsaEncrypt(meta, publicKey);
+        Assert.assertNotNull(cryptText);
+        String text = codecKit.rsaDecrypt(cryptText, privateKey);
+        Assert.assertEquals(meta, text);
+
+        cryptText = codecKit.rsaEncrypt(meta, encryptPublicKeyNew, SecretKeyTypeEnum.PUBLIC_KEY);
+        Assert.assertNotNull(cryptText);
+        text = codecKit.rsaDecrypt(cryptText, encryptPrivateKeyNew, SecretKeyTypeEnum.PRIVATE_KEY);
+        Assert.assertEquals(meta, text);
+
+        byte[] signBytes = codecKit.rsaSign(privateKey, meta);
+        Assert.assertNotNull(signBytes);
+        boolean signFlag = codecKit.rsaVerifySign(publicKey, signBytes, meta);
+        Assert.assertTrue(signFlag);
     }
 
     @Test
