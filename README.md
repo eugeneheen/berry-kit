@@ -58,13 +58,13 @@ Maven：
 <dependency>
 <groupId>commons-codec</groupId>
 <artifactId>commons-codec</artifactId>
-<version>1.11</version>
+<version>1.12</version>
 </dependency>
 ```
 
 Gradle：
 ```
-compile 'commons-codec:commons-codec:1.11'
+compile 'commons-codec:commons-codec:1.12'
 ```
  
 - Apache Commons Text
@@ -125,20 +125,6 @@ Gradle：
 compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
 compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
-```
-
-- OkHttp3
-```
-<dependency>
- <groupId>com.squareup.okhttp3</groupId>
- <artifactId>okhttp</artifactId>
- <version>3.11.0</version>
-</dependency>
-```
-
-Gradle：
-```
-compile 'com.squareup.okhttp3:okhttp:3.11.0'
 ```
 
 - jjwt

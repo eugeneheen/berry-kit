@@ -99,7 +99,7 @@ public class JsonKit {
     }
 
     /**
-     * 解析JSON字符串为一个自定义的集合
+     * 解析JSON字符串为一个自定义泛型的集合
      * @param json JSON字符串
      * @param collectionClazz 转换结果的集合Class类型
      * @param clazz 转换结果集合存放的元素Class类型
@@ -119,7 +119,27 @@ public class JsonKit {
     }
 
     /**
-     * 解析JSON文件流串为一个自定义的集合
+     * 解析Collection集合对象为一个自定义泛型的集合
+     * @param collection Collection集合对象
+     * @param collectionClazz 转换结果的集合Class类型
+     * @param clazz 转换结果集合存放的元素Class类型
+     * @param <T> 泛型定义
+     * @return Collection集合
+     * @throws JsonParseException JSON解析异常
+     */
+    public <T> T readAsCollection(Collection collection, Class<? extends Collection> collectionClazz, Class<?> clazz) throws JsonParseException {
+        T t;
+        try {
+            t = this.objectMapper.readValue(this.write(collection), this.getCollectionType(collectionClazz, clazz));
+        } catch (IOException e) {
+            throw new JsonParseException("JSON字符串转换为集合类型，时发生异常!", e);
+        }
+
+        return t;
+    }
+
+    /**
+     * 解析JSON文件流串为一个自定义泛型的集合
      * @param inputStream JSON文件流
      * @param collectionClazz 转换结果的集合Class类型
      * @param clazz 转换结果集合存放的元素Class类型
