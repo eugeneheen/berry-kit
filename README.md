@@ -16,12 +16,12 @@
 compile 'com.github.eugeneheen:berry-kit:1.0.12'
 ```
 - 发布特性说明
-  1. 新增DES、3DES、AES对称加密工具方法
-  2. 新增RSA非对称加密工具方法
+  -  新增DES、3DES、AES对称加密工具方法
+  -  新增RSA非对称加密工具方法
 - Fix：
-  1. 完善CodecKitTest单元测试
-  2. 重构CodecKit工具包原有部分方法实现
-  3. 完善CodecKit文档注释
+  - 完善CodecKitTest单元测试
+  - 重构CodecKit工具包原有部分方法实现
+  - 完善CodecKit文档注释
 
 ## API文档
 - 最新版本1.0.12在线文档：https://eugeneheen.gitee.io/berrykit-doc
