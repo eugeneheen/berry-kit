@@ -1,20 +1,48 @@
 # berry-kit
 本工程封装了Java中常用的一些工具箱，开箱即用的工具方法，需要JDK1.8
 
-## 工程构建及文档生成
-工程采用Gradle作为构建工具，常用命令：
-- 构建模块
+## 版本发布说明
+- 当前发布版本号：1.0.12
+- Maven依赖
 ```
-$ gradle build
+<dependency>
+    <groupId>com.github.eugeneheen</groupId>
+    <artifactId>berry-kit</artifactId>
+    <version>1.0.12</version>
+</dependency>
 ```
+- Gradle依赖
+```
+compile 'com.github.eugeneheen:berry-kit:1.0.12'
+```
+- 发布特性说明
+  -  新增DES、3DES、AES对称加密工具方法
+  -  新增RSA非对称加密工具方法
+- Fix：
+  - 完善CodecKitTest单元测试
+  - 重构CodecKit工具包原有部分方法实现
+  - 完善CodecKit文档注释
 
-- 生成文档
+## API文档
+- 最新版本1.0.12在线文档：https://eugeneheen.gitee.io/berrykit-doc
+- 历史版本API文档，请自行生成本地API文档：
 ```
 $ gradle javadoc
 ```
+>生成的本地API文档，存放在项目根目录的build\docs\javadoc文件夹中，直接运行index.html查看API文档。
 
-> 无论是构建生成的jar文件，还是生成API文档均在对项目根目录的build文件夹中
+## 工程构建
+工程采用Gradle作为构建工具，常用命令：
+- 构建berry-kit
+```
+$ gradle build
+```
+> 通过命令```gradle build```构建生成的jar文件，存放在项目根目录的build文件夹中
 
+- 发布berry-kit至本地Maven仓库
+```
+$ gradle publishToMavenLocal
+```
 
 ## 项目的第三方依赖
 封装工具箱的部分工具方法，也是用到主流的第三方依赖，具体版本说明见下文
