@@ -1,5 +1,5 @@
-# berry-kit[`:cn:` `:strawberry:`浆果工具箱`:cherries:` `:grapes:`]
-本工程封装了Java中常用的一些工具箱，开箱即用的工具方法，需要JDK1.8
+# berry-kit
+:cn::sparkles::strawberry:浆果工具箱:cherries::grapes:封装了Java中常用的一些工具箱，开箱即用的工具方法，需要JDK1.8
 
 ## 版本发布说明
 - 当前发布版本号：1.0.12
