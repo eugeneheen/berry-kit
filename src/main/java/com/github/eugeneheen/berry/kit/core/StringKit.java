@@ -1,6 +1,5 @@
 package com.github.eugeneheen.berry.kit.core;
 
-import com.github.eugeneheen.berry.kit.exception.NoSupportLogLevel;
 import com.github.eugeneheen.berry.kit.exception.RandomException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
