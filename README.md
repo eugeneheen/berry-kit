@@ -2,18 +2,19 @@
 :heart::strawberry:浆果工具箱:cherries::grapes:封装了Java中常用的开箱即用的工具方法，需要JDK1.8+。
 
 ## 版本发布说明
-- 当前发布版本号：1.0.12
+- 发布版本号：1.0.13
+- 发布状态：待发布
 - Maven依赖
 ```
 <dependency>
     <groupId>com.github.eugeneheen</groupId>
     <artifactId>berry-kit</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
 </dependency>
 ```
 - Gradle依赖
 ```
-compile 'com.github.eugeneheen:berry-kit:1.0.12'
+compile 'com.github.eugeneheen:berry-kit:1.0.13'
 ```
 - 发布特性说明
   -  新增DES、3DES、AES对称加密工具方法
@@ -24,7 +25,7 @@ compile 'com.github.eugeneheen:berry-kit:1.0.12'
   - 完善CodecKit文档注释
 
 ## API文档
-- 最新版本1.0.12在线文档：https://eugeneheen.gitee.io/berrykit-doc
+- 最新版本1.0.13在线文档：https://eugeneheen.gitee.io/berrykit-doc
 - 历史版本API文档，请自行生成本地API文档：
 ```
 $ gradle javadoc
