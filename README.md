@@ -17,12 +17,9 @@
 compile 'com.github.eugeneheen:berry-kit:1.0.13'
 ```
 - 发布特性说明
-  -  新增DES、3DES、AES对称加密工具方法
-  -  新增RSA非对称加密工具方法
+  -  DateKit新增毫秒、秒、分转换工具方法
 - Fix：
-  - 完善CodecKitTest单元测试
-  - 重构CodecKit工具包原有部分方法实现
-  - 完善CodecKit文档注释
+  - 完善DateKitTest单元测试
 
 ## API文档
 - 最新版本1.0.13在线文档：https://eugeneheen.gitee.io/berrykit-doc
