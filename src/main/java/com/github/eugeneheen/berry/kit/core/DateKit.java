@@ -594,4 +594,58 @@ public class DateKit {
                 throw new NotSupportDateFieldException("不支持所提供的日历字段");
         }
     }
+
+    /**
+     * <p>毫秒转换为秒</p>
+     * @param millisecond 待转换的毫秒
+     * @return millisecond转换得到的秒数
+     */
+    public long millisecondToSecond(long millisecond) {
+        return millisecond / 1000;
+    }
+
+    /**
+     * <p>毫秒转换为分钟</p>
+     * @param millisecond 待转换的毫秒
+     * @return millisecond转换得到的分钟数
+     */
+    public long millisecondToMinute(long millisecond) {
+        return this.secondToMinute(this.millisecondToSecond(millisecond));
+    }
+
+    /**
+     * <p>秒转换为毫秒</p>
+     * @param minute 待转换的秒
+     * @return minute转换得到的毫秒数
+     */
+    public long secondToMillisecond(long minute) {
+        return minute * 1000;
+    }
+
+    /**
+     * <p>秒转换为分钟</p>
+     * @param minute 待转换的秒
+     * @return minute转换得到的分钟数
+     */
+    public long secondToMinute(long minute) {
+        return minute / 60;
+    }
+
+    /**
+     * <p>分钟转换为毫秒/p>
+     * @param second 待转换的分钟
+     * @return second转换得到的毫秒数
+     */
+    public long minuteToMillisecond(long second) {
+        return this.secondToMillisecond(this.minuteToSecond(second));
+    }
+
+    /**
+     * <p>分钟转换为秒</p>
+     * @param second 待转换的分钟
+     * @return second转换得到的秒数
+     */
+    public long minuteToSecond(long second) {
+        return second * 60;
+    }
 }

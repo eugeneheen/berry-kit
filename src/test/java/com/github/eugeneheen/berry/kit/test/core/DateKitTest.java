@@ -87,4 +87,88 @@ public class DateKitTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testMillisecondToSecond() {
+        DateKit dateKit = new DateKit();
+        // 2小时
+        long minute = dateKit.millisecondToSecond(7200000);
+        Assert.assertEquals(7200, minute);
+        // 1.5小时
+        minute = dateKit.millisecondToSecond(5400000);
+        Assert.assertEquals(5400, minute);
+        // 15分钟
+        minute = dateKit.millisecondToSecond(900000);
+        Assert.assertEquals(900, minute);
+    }
+
+    @Test
+    public void testMillisecondToMinute() {
+        DateKit dateKit = new DateKit();
+        // 2小时
+        long minute = dateKit.millisecondToMinute(7200000);
+        Assert.assertEquals(120, minute);
+        // 1.5小时
+        minute = dateKit.millisecondToMinute(5400000);
+        Assert.assertEquals(90, minute);
+        // 15分钟
+        minute = dateKit.millisecondToMinute(900000);
+        Assert.assertEquals(15, minute);
+    }
+
+    @Test
+    public void testSecondToMillisecond() {
+        DateKit dateKit = new DateKit();
+        // 2小时
+        long minute = dateKit.secondToMillisecond(7200);
+        Assert.assertEquals(7200000, minute);
+        // 1.5小时
+        minute = dateKit.secondToMillisecond(5400);
+        Assert.assertEquals(5400000, minute);
+        // 15分钟
+        minute = dateKit.secondToMillisecond(900);
+        Assert.assertEquals(900000, minute);
+    }
+
+    @Test
+    public void testSecondToMinute() {
+        DateKit dateKit = new DateKit();
+        // 2小时
+        long minute = dateKit.secondToMinute(7200);
+        Assert.assertEquals(120, minute);
+        // 1.5小时
+        minute = dateKit.secondToMinute(5400);
+        Assert.assertEquals(90, minute);
+        // 15分钟
+        minute = dateKit.secondToMinute(900);
+        Assert.assertEquals(15, minute);
+    }
+
+    @Test
+    public void testMinuteToMillisecond() {
+        DateKit dateKit = new DateKit();
+        // 15分钟
+        long hour = dateKit.minuteToMillisecond(15);
+        Assert.assertEquals(900000, hour);
+        // 90分钟
+        hour = dateKit.minuteToMillisecond(90);
+        Assert.assertEquals(5400000, hour);
+        // 120分钟
+        hour = dateKit.minuteToMillisecond(120);
+        Assert.assertEquals(7200000, hour);
+    }
+
+    @Test
+    public void testMinuteToSecond() {
+        DateKit dateKit = new DateKit();
+        // 15分钟
+        long hour = dateKit.minuteToSecond(15);
+        Assert.assertEquals(900, hour);
+        // 90分钟
+        hour = dateKit.minuteToSecond(90);
+        Assert.assertEquals(5400, hour);
+        // 120分钟
+        hour = dateKit.minuteToSecond(120);
+        Assert.assertEquals(7200, hour);
+    }
 }
