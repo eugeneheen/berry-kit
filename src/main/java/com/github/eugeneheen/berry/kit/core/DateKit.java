@@ -14,6 +14,7 @@ import java.util.Date;
  * <p>
  * 日期时间工具箱，提供最基本常用的日期时间处理实现。
  * </p>
+ *
  * @author Eugene
  */
 public class DateKit {
@@ -69,6 +70,31 @@ public class DateKit {
     public static final int CALENDAR_OFFSET = 1;
 
     /**
+     * 24小时（1天）的毫秒值
+     */
+    public static final long DAY = 1000L * 60 * 60 * 24;
+
+    /**
+     * 60分钟（1小时）的毫秒值
+     */
+    public static final long HOUR = 1000L * 60 * 60;
+
+    /**
+     * 30分钟（半小时）的毫秒值
+     */
+    public static final long HALF_HOUR = 1000L * 60 * 30;
+
+    /**
+     * 1分钟的毫秒值
+     */
+    public static final long MINUTE = 1000L * 60;
+
+    /**
+     * 1秒钟的毫秒值
+     */
+    public static final long SECOND = 1000L;
+
+    /**
      * 构造方法
      */
     public DateKit() {
@@ -76,7 +102,8 @@ public class DateKit {
 
     /**
      * 自定义日期转换格式
-     * @param date java.util.Date对象
+     *
+     * @param date    java.util.Date对象
      * @param pattern 日期格式
      * @return 返回自定日期格式字符串
      */
@@ -86,8 +113,9 @@ public class DateKit {
 
     /**
      * 自定义日期转换格式
+     *
      * @param calendar java.util.Calendar对象
-     * @param pattern 日期格式
+     * @param pattern  日期格式
      * @return 返回自定日期格式字符串
      */
     public String formart(Calendar calendar, String pattern) {
@@ -96,7 +124,8 @@ public class DateKit {
 
     /**
      * 自定义日期转换格式
-     * @param date java.util.Date对象
+     *
+     * @param date    java.util.Date对象
      * @param pattern 日期格式
      * @return 返回自定日期格式java.util.Calendar对象
      * @throws ParseException 解析日期发生异常，日期字符串与解析格式不匹配发生异常（日期字符串内容可多于解析格式内容，例如：日期字符串是年-月-日 时:分:秒，解析格式yyyy-MM-dd HH:mm或yyyy-MM-dd均合法）
@@ -188,7 +217,8 @@ public class DateKit {
 
     /**
      * 解析日期字符串为指定格式
-     * @param date 日期字符串
+     *
+     * @param date    日期字符串
      * @param pattern 日期格式
      * @return java.util.Date对象
      * @throws ParseException 解析日期发生异常
@@ -199,6 +229,7 @@ public class DateKit {
 
     /**
      * 解析日期字符串，解析格式yyyy-MM-dd HH:mm:ss
+     *
      * @param date 日期字符串
      * @return java.util.Date对象
      * @throws ParseException 解析日期发生异常，日期字符串与解析格式不匹配发生异常（日期字符串内容可多于解析格式内容，例如：日期字符串是年-月-日 时:分:秒，解析格式yyyy-MM-dd HH:mm或yyyy-MM-dd均合法）
@@ -209,6 +240,7 @@ public class DateKit {
 
     /**
      * 解析日期字符串，解析格式yyyy-MM-dd HH:mm
+     *
      * @param date 日期字符串
      * @return java.util.Date对象
      * @throws ParseException 解析日期发生异常，日期字符串与解析格式不匹配发生异常（日期字符串内容可多于解析格式内容，例如：日期字符串是年-月-日 时:分:秒，解析格式yyyy-MM-dd HH:mm或yyyy-MM-dd均合法）
@@ -219,6 +251,7 @@ public class DateKit {
 
     /**
      * 解析日期字符串，解析格式yyyy-MM
+     *
      * @param date 日期字符串
      * @return java.util.Date对象
      * @throws ParseException 解析日期发生异常，日期字符串与解析格式不匹配发生异常
@@ -255,6 +288,7 @@ public class DateKit {
 
     /**
      * 获取年
+     *
      * @param date java.util.Date对象
      * @return 年
      */
@@ -264,6 +298,7 @@ public class DateKit {
 
     /**
      * 获取年
+     *
      * @param calendar java.util.Calendar对象
      * @return 年
      */
@@ -273,6 +308,7 @@ public class DateKit {
 
     /**
      * 获取月
+     *
      * @param date java.util.Date对象
      * @return 月
      */
@@ -282,6 +318,7 @@ public class DateKit {
 
     /**
      * 获取月
+     *
      * @param calendar java.util.Calendar对象
      * @return 月
      */
@@ -291,6 +328,7 @@ public class DateKit {
 
     /**
      * 获取天
+     *
      * @param date java.util.Date对象
      * @return 天
      */
@@ -300,6 +338,7 @@ public class DateKit {
 
     /**
      * 获取天
+     *
      * @param calendar java.util.Calendar对象
      * @return 天
      */
@@ -309,6 +348,7 @@ public class DateKit {
 
     /**
      * 获取星期
+     *
      * @param date java.util.Date对象
      * @return 星期
      */
@@ -318,6 +358,7 @@ public class DateKit {
 
     /**
      * 获取星期
+     *
      * @param calendar java.util.Calendar对象
      * @return 星期
      */
@@ -327,6 +368,7 @@ public class DateKit {
 
     /**
      * 获取中文星期
+     *
      * @param calendar java.util.Calendar对象
      * @return 中文星期
      */
@@ -355,6 +397,7 @@ public class DateKit {
 
     /**
      * 获取虚岁年龄，例如：生日日期是1980-02-01，当前日期是1984-01-01，实际并未满2岁，但是虚岁年龄是2岁
+     *
      * @param birthday java.util.Calendar对象，生日日期
      * @return 虚岁年龄
      */
@@ -365,6 +408,7 @@ public class DateKit {
 
     /**
      * 获取虚岁年龄，例如：生日日期是1980-02-01，当前日期是1984-01-01，实际并未满2岁，但是虚岁年龄是2岁
+     *
      * @param birthday java.util.Date对象，生日日期
      * @return 虚岁年龄
      */
@@ -397,7 +441,8 @@ public class DateKit {
 
     /**
      * 指定的日期增加指定年数
-     * @param date java.util.Date对象，指定的日期
+     *
+     * @param date   java.util.Date对象，指定的日期
      * @param amount 增加年数，正数表示增加，复数表示减少
      * @return 增加指定年数后的日期
      */
@@ -407,8 +452,9 @@ public class DateKit {
 
     /**
      * 指定的日历增加指定年数
+     *
      * @param calendar java.util.Calendar对象，指定的日期
-     * @param amount 增加年数，正数表示增加，复数表示减少
+     * @param amount   增加年数，正数表示增加，复数表示减少
      * @return 增加指定年数后的日期
      */
     public Date addYears(Calendar calendar, int amount) {
@@ -417,7 +463,8 @@ public class DateKit {
 
     /**
      * 指定的日期增加指定月数
-     * @param date java.util.Date对象，指定的日期
+     *
+     * @param date   java.util.Date对象，指定的日期
      * @param amount 增加月数，正数表示增加，复数表示减少
      * @return 增加指定月数后的日期
      */
@@ -427,8 +474,9 @@ public class DateKit {
 
     /**
      * 指定的日历增加指定月数
+     *
      * @param calendar java.util.Calendar对象，指定的日期
-     * @param amount 增加月数，正数表示增加，复数表示减少
+     * @param amount   增加月数，正数表示增加，复数表示减少
      * @return 增加指定月数后的日期
      */
     public Date addMonth(Calendar calendar, int amount) {
@@ -437,7 +485,8 @@ public class DateKit {
 
     /**
      * 指定的日期增加指定天数
-     * @param date java.util.Date对象，指定的日期
+     *
+     * @param date   java.util.Date对象，指定的日期
      * @param amount 增加天数，正数表示增加，复数表示减少
      * @return 增加指定天数后的日期
      */
@@ -447,8 +496,9 @@ public class DateKit {
 
     /**
      * 指定的日历增加指定天数
+     *
      * @param calendar java.util.Calendar对象，指定的日期
-     * @param amount 增加天数，正数表示增加，复数表示减少
+     * @param amount   增加天数，正数表示增加，复数表示减少
      * @return 增加指定天数后的日期
      */
     public Date addDays(Calendar calendar, int amount) {
@@ -457,7 +507,8 @@ public class DateKit {
 
     /**
      * 指定的日期增加指定小时数
-     * @param date java.util.Date对象，指定的日期
+     *
+     * @param date   java.util.Date对象，指定的日期
      * @param amount 增加小时数，正数表示增加，复数表示减少
      * @return 增加指定小时数后的日期
      */
@@ -467,8 +518,9 @@ public class DateKit {
 
     /**
      * 指定的日历增加指定小时数
+     *
      * @param calendar java.util.Calendar对象，指定的日期
-     * @param amount 增加小时数，正数表示增加，复数表示减少
+     * @param amount   增加小时数，正数表示增加，复数表示减少
      * @return 增加指定小时数后的日期
      */
     public Date addHours(Calendar calendar, int amount) {
@@ -477,7 +529,8 @@ public class DateKit {
 
     /**
      * 指定的日期增加指定分钟数
-     * @param date java.util.Date对象，指定的日期
+     *
+     * @param date   java.util.Date对象，指定的日期
      * @param amount 增加分钟数，正数表示增加，复数表示减少
      * @return 增加指定分钟数后的日期
      */
@@ -487,8 +540,9 @@ public class DateKit {
 
     /**
      * 指定的日历增加指定分钟数
+     *
      * @param calendar java.util.Calendar对象，指定的日期
-     * @param amount 增加分钟数，正数表示增加，复数表示减少
+     * @param amount   增加分钟数，正数表示增加，复数表示减少
      * @return 增加指定分钟数后的日期
      */
     public Date addMinutes(Calendar calendar, int amount) {
@@ -497,7 +551,8 @@ public class DateKit {
 
     /**
      * 获取日历
-     * @param year 年
+     *
+     * @param year  年
      * @param month 月
      * @return java.util.Calendar对象
      */
@@ -510,7 +565,8 @@ public class DateKit {
 
     /**
      * 比较日期，会比较年月日，时分秒毫秒
-     * @param first 第一个日期
+     *
+     * @param first  第一个日期
      * @param second 第二个日期
      * @return 第一个日期晚于第二个日期返回1，早于返回-1，相同返回0
      */
@@ -526,9 +582,8 @@ public class DateKit {
     }
 
     /**
-     *
-     * @param first 第一个日期
-     * @param second 第二个日期
+     * @param first   第一个日期
+     * @param second  第二个日期
      * @param pattern 日期格式
      * @return 第一个日期晚于第二个日期返回1，早于返回-1，相同返回0
      * @throws ParseException 解析日期发生异常，日期字符串与解析格式不匹配发生异常（日期字符串内容可多于解析格式内容，例如：日期字符串是年-月-日 时:分:秒，解析格式yyyy-MM-dd HH:mm或yyyy-MM-dd均合法）
@@ -542,7 +597,8 @@ public class DateKit {
 
     /**
      * 时间比较晚于验证
-     * @param first 第一个日期
+     *
+     * @param first  第一个日期
      * @param second 第二个日期
      * @return 如果第一个日期晚于第二个日期返回true，否则返回false
      */
@@ -552,7 +608,8 @@ public class DateKit {
 
     /**
      * 时间比较早于验证
-     * @param first 第一个日期
+     *
+     * @param first  第一个日期
      * @param second 第二个日期
      * @return 如果第一个日期早于第二个日期返回true，否则返回false
      */
@@ -562,7 +619,8 @@ public class DateKit {
 
     /**
      * 时间比较相同验证
-     * @param first 第一个日期
+     *
+     * @param first  第一个日期
      * @param second 第二个日期
      * @return 如果第一个日期与第二个日期相同返回true，否则返回false
      */
@@ -572,9 +630,10 @@ public class DateKit {
 
     /**
      * 时间比较相同验证
-     * @param first 第一个日期
+     *
+     * @param first  第一个日期
      * @param second 第二个日期
-     * @param field 日历字段，可通过DateKit前缀为FIELD_*的常量获取
+     * @param field  日历字段，可通过DateKit前缀为FIELD_*的常量获取
      * @param offset 日历偏移量，正数表示增加，复数表示减少
      * @return 如果第一个日期与第二个日期相同返回true，否则返回false
      */
@@ -597,6 +656,7 @@ public class DateKit {
 
     /**
      * <p>毫秒转换为秒</p>
+     *
      * @param millisecond 待转换的毫秒
      * @return millisecond转换得到的秒数
      */
@@ -606,6 +666,7 @@ public class DateKit {
 
     /**
      * <p>毫秒转换为分钟</p>
+     *
      * @param millisecond 待转换的毫秒
      * @return millisecond转换得到的分钟数
      */
@@ -615,6 +676,7 @@ public class DateKit {
 
     /**
      * <p>秒转换为毫秒</p>
+     *
      * @param minute 待转换的秒
      * @return minute转换得到的毫秒数
      */
@@ -624,6 +686,7 @@ public class DateKit {
 
     /**
      * <p>秒转换为分钟</p>
+     *
      * @param minute 待转换的秒
      * @return minute转换得到的分钟数
      */
@@ -633,6 +696,7 @@ public class DateKit {
 
     /**
      * <p>分钟转换为毫秒/p>
+     *
      * @param second 待转换的分钟
      * @return second转换得到的毫秒数
      */
@@ -642,6 +706,7 @@ public class DateKit {
 
     /**
      * <p>分钟转换为秒</p>
+     *
      * @param second 待转换的分钟
      * @return second转换得到的秒数
      */
