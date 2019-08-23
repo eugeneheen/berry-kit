@@ -165,7 +165,7 @@ public class CodecKit {
     }
 
     /**
-     * <p>生成SecretKeySpec类型AES密钥</p>
+     * <p>生成SecretKeySpec类型AESS随机数密钥</p>
      *
      * @param key    密钥
      * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
@@ -173,7 +173,7 @@ public class CodecKit {
      * @throws CodecException 抛出CodecKit工具类统一的运行时异常
      * @see NoSuchAlgorithmException 生成密钥使用的算法无法解析
      */
-    public SecretKeySpec genAesKey(String key, DigitsEnum digits) {
+    public SecretKeySpec genAesRandomKey(String key, DigitsEnum digits) {
 
         try {
             byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
@@ -552,15 +552,75 @@ public class CodecKit {
      * @param text 待加密的原始内容
      * @return AES加密后的内容
      */
-    public String aesEncrypt(String key, String text) {
-        SecretKeySpec keySpec = this.genAesKey(key, DigitsEnum.AES_128);
+    public String aesRandomEncrypt(String key, String text) {
+        SecretKeySpec keySpec = this.genAesRandomKey(key, DigitsEnum.AES_128);
         byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
         byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
         return this.encodeBase64(encryptBytes);
     }
 
     /**
-     * <p>AES加密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesEncrypt(String, String)}</p>
+     * <p>AES加密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesRandomEncrypt(String, String)}</p>
+     *
+     * @param key    密钥
+     * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
+     * @param text   待加密的原始内容
+     * @return AES加密后的内容
+     */
+    public String aesRandomEncrypt(String key, DigitsEnum digits, String text) {
+        SecretKeySpec keySpec = this.genAesRandomKey(key, digits);
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
+        return this.encodeBase64(encryptBytes);
+    }
+
+    /**
+     * <p>AES解密，默认128位长度的密钥</p>
+     *
+     * @param key       密钥
+     * @param cryptText AES加密后的字符串
+     * @return AES加密前的原始内容
+     */
+    public String aesRandomDecrypt(String key, String cryptText) {
+        SecretKeySpec keySpec = this.genAesRandomKey(key, DigitsEnum.AES_128);
+        byte[] textBytes = this.decodeBase64Bytes(cryptText);
+        byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * <p>AES解密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesRandomEncrypt(String, String)}</p>
+     *
+     * @param key       密钥
+     * @param digits    加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
+     * @param cryptText AES加密后的字符串
+     * @return AES加密前的原始内容
+     */
+    public String aesRandomDecrypt(String key, DigitsEnum digits, String cryptText) {
+        SecretKeySpec keySpec = this.genAesRandomKey(key, digits);
+        byte[] textBytes = this.decodeBase64Bytes(cryptText);
+        byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
+    }
+
+    ///
+
+    /**
+     * <p>AES加密，默认128位长度的密钥</p>
+     *
+     * @param key  密钥
+     * @param text 待加密的原始内容
+     * @return AES加密后的内容
+     */
+    public String aesEncrypt(String key, String text) {
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), AlgorithmsEnum.AES.getAlgorithms());
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
+        return this.encodeBase64(encryptBytes);
+    }
+
+    /**
+     * <p>AES加密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesRandomEncrypt(String, String)}</p>
      *
      * @param key    密钥
      * @param digits 加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
@@ -568,7 +628,7 @@ public class CodecKit {
      * @return AES加密后的内容
      */
     public String aesEncrypt(String key, DigitsEnum digits, String text) {
-        SecretKeySpec keySpec = this.genAesKey(key, digits);
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), AlgorithmsEnum.AES.getAlgorithms());
         byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
         byte[] encryptBytes = this.aesEncryptOrDecrypt(Cipher.ENCRYPT_MODE, keySpec, textBytes);
         return this.encodeBase64(encryptBytes);
@@ -582,14 +642,14 @@ public class CodecKit {
      * @return AES加密前的原始内容
      */
     public String aesDecrypt(String key, String cryptText) {
-        SecretKeySpec keySpec = this.genAesKey(key, DigitsEnum.AES_128);
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), AlgorithmsEnum.AES.getAlgorithms());
         byte[] textBytes = this.decodeBase64Bytes(cryptText);
         byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
-     * <p>AES解密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesEncrypt(String, String)}</p>
+     * <p>AES解密，使用指定长度的密钥。如果使用默认密钥长度{@link DigitsEnum#AES_128}，直接使用方法{@link CodecKit#aesRandomEncrypt(String, String)}</p>
      *
      * @param key       密钥
      * @param digits    加密密钥长度，支持的加密密钥长度：{@link DigitsEnum#AES_128}、{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}。获得无政策权限后可使用：{@link DigitsEnum#AES_192}、{@link DigitsEnum#AES_256}
@@ -597,7 +657,7 @@ public class CodecKit {
      * @return AES加密前的原始内容
      */
     public String aesDecrypt(String key, DigitsEnum digits, String cryptText) {
-        SecretKeySpec keySpec = this.genAesKey(key, digits);
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), AlgorithmsEnum.AES.getAlgorithms());
         byte[] textBytes = this.decodeBase64Bytes(cryptText);
         byte[] decryptBytes = this.aesEncryptOrDecrypt(Cipher.DECRYPT_MODE, keySpec, textBytes);
         return new String(decryptBytes, StandardCharsets.UTF_8);
@@ -607,7 +667,7 @@ public class CodecKit {
      * <p>AES加解密</p>
      *
      * @param mode 加密模式:{@link Cipher#ENCRYPT_MODE}；解密模式：{@link Cipher#DECRYPT_MODE}
-     * @param key  {@link SecretKeySpec}密钥，使用{@link CodecKit#genAesKey(String, DigitsEnum)}快速创建密钥
+     * @param key  {@link SecretKeySpec}密钥，使用{@link CodecKit#genAesRandomKey(String, DigitsEnum)}快速创建密钥
      * @param text 加解密数据
      * @return 加密解密后的数据
      */

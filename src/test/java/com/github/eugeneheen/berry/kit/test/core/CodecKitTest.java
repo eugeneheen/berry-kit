@@ -1,8 +1,14 @@
 package com.github.eugeneheen.berry.kit.test.core;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.eugeneheen.berry.kit.core.CodecKit;
 import com.github.eugeneheen.berry.kit.enumeration.DigitsEnum;
 import com.github.eugeneheen.berry.kit.enumeration.SecretKeyTypeEnum;
+import com.github.eugeneheen.berry.kit.test.AESUtil;
+import com.github.eugeneheen.berry.kit.test.UserForm;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
@@ -21,6 +27,13 @@ import java.util.Map;
 
 public class CodecKitTest {
     private static CodecKit codecKit;
+
+    private static ObjectMapper objectMapper;
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+    }
 
     @BeforeClass
     public static void beforeClass() {
@@ -45,9 +58,9 @@ public class CodecKitTest {
     @Test
     public void testGenSecretKey() {
         final String KEY = "eugenHeen_123456";
-        SecretKeySpec keySpec = codecKit.genAesKey(KEY, DigitsEnum.AES_128);
+        SecretKeySpec keySpec = codecKit.genAesRandomKey(KEY, DigitsEnum.AES_128);
         Assert.assertNotNull(keySpec);
-        keySpec = codecKit.genAesKey(KEY, DigitsEnum.AES_128);
+        keySpec = codecKit.genAesRandomKey(KEY, DigitsEnum.AES_128);
         Assert.assertNotNull(keySpec);
     }
 
@@ -81,9 +94,32 @@ public class CodecKitTest {
     }
 
     @Test
-    public void testAES() {
+    public void testRandomAES() {
         String KEY = "eUGeNebeRrYKiTc22";
         String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
+
+        String encrypt = codecKit.aesRandomEncrypt(KEY, defaultVal);
+        Assert.assertNotNull(encrypt);
+        String decrypt = codecKit.aesRandomDecrypt(KEY, encrypt);
+        Assert.assertEquals(defaultVal, decrypt);
+
+        encrypt = codecKit.aesRandomEncrypt(KEY, DigitsEnum.AES_192, defaultVal);
+        Assert.assertNotNull(encrypt);
+        decrypt = codecKit.aesRandomDecrypt(KEY, DigitsEnum.AES_192, encrypt);
+        Assert.assertEquals(defaultVal, decrypt);
+    }
+
+    @Test
+    public void testAES() throws Exception {
+        String KEY = "beoneSmaRt_out66";
+//        String defaultVal = "{\"name\": \"eugene\",\"age\": 18}";
+        String defaultVal = "{\n" +
+                "            \"gendaer\": 1,\n" +
+                "            \"identityCardNo\": \"510113199901015089\",\n" +
+                "            \"name\": \"张三\",\n" +
+                "            \"nickName\": \"zhangsan\",\n" +
+                "            \"parentId\": -1\n" +
+                "        }";
 
         String encrypt = codecKit.aesEncrypt(KEY, defaultVal);
         Assert.assertNotNull(encrypt);
@@ -94,6 +130,8 @@ public class CodecKitTest {
         Assert.assertNotNull(encrypt);
         decrypt = codecKit.aesDecrypt(KEY, DigitsEnum.AES_192, encrypt);
         Assert.assertEquals(defaultVal, decrypt);
+
+        decrypt = AESUtil.aesDecrypt("lsC+udbcZFF6eisJDdfEzw==");
     }
 
     @Test
